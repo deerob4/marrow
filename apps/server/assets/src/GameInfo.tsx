@@ -1,0 +1,26 @@
+import * as React from "react";
+import { Game } from "./Wow";
+
+function playerCount({ minPlayers, maxPlayers }: Game) {
+  if (minPlayers === maxPlayers) {
+    const inflection = minPlayers === 1 ? "player" : "players";
+    return `${minPlayers} ${inflection}`;
+  }
+  return `${minPlayers} - ${maxPlayers} players`;
+}
+
+function description(game: Game) {
+  const players = playerCount(game);
+  const desc = game.description ? game.description : "No description available.";
+  return `${desc} For ${players}.`;
+}
+
+export const GameInfo: React.SFC<Game> = game => {
+  return (
+    <div className="game-info">
+      <h3 className="game__title">{game.title}</h3>
+      <h4 className="game__author">{game.author}</h4>
+      <p className="game__description">{description(game)}</p>
+    </div>
+  );
+};

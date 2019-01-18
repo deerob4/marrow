@@ -1,0 +1,275 @@
+// Fonts
+
+$body-bg: darken(#fff, 0%) !important;
+
+$headings-color: #0d0a0b !important;
+// $body-color: #3d4f60;
+
+$theme-colors: (
+  "primary": #6161ff,
+  "secondary": #ffdf8e,
+  "danger": #d748a8
+);
+
+$card-border-radius: 0;
+
+// $alert-bg-level: -5;
+// $alert-border-level: -4;
+
+$font-family-sans-serif: europa, sans-serif !important;
+$font-family-monospace: fira-mono, monospace !important;
+
+$navbar-brand-font-size: 1.8rem;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// @import "../node_modules/normalize.css/normalize";
+@import "../node_modules/codemirror/lib/codemirror";
+
+:root {
+  --marrow-brand: #ffdf8e;
+  --marrow-light: #ffe;
+  --marrow-accent: #d748a8;
+  --marrow-dark: #0d0a0b;
+
+  --font-stack: europa, sans-serif;
+  --tile-size: 25px;
+}
+
+.navbar-brand {
+  font-family: reross-quadratic, sans-serif;
+}
+
+.action-bar {
+  height: 100%;
+  width: 60px;
+  background-color: color($pink);
+}
+
+html,
+body,
+.container {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+:root {
+  --border-style: 2px solid #d5d5d5;
+  --grid-border-radius: 5px;
+}
+
+@media (max-width: 499px) {
+  :root {
+    --grid-size: 30px;
+  }
+}
+
+@media (min-width: 500px) {
+  :root {
+    --grid-size: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --grid-size: 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --grid-size: 60px;
+  }
+}
+
+.grid {
+  display: grid;
+}
+
+.master-grid {
+  display: grid;
+  /* grid-template-columns: repeat(3, 1fr); */
+  /* grid-template-columns: repeat(auto-fit, minmax(100px, auto)); */
+  grid-gap: 50px;
+  margin-top: 50px;
+}
+
+/* Format the tiles. */
+
+textarea {
+  font-family: monospace;
+  font-size: 15px;
+}
+
+.tile {
+  width: 50px;
+  height: 50px;
+  font-family: sans-serif;
+  text-align: center;
+  display: grid;
+}
+
+.tile {
+  border-top: var(--border-style);
+  border-left: var(--border-style);
+}
+
+.tile--right-edge {
+  border-right: var(--border-style);
+}
+
+.tile--bottom-edge {
+  border-bottom: var(--border-style);
+}
+
+.tile--top-left {
+  border-top-left-radius: var(--grid-border-radius);
+}
+
+.tile--top-right {
+  border-top-right-radius: var(--grid-border-radius);
+}
+
+.tile--bottom-left {
+  border-bottom-left-radius: var(--grid-border-radius);
+}
+
+.tile--bottom-right {
+  border-bottom-right-radius: var(--grid-border-radius);
+}
+
+.tile--start-path {
+  background-color: #6161ff;
+}
+
+// body {
+//   background-color: var(--marrow-light);
+// }
+
+// h1,
+// h2 {
+//   margin-top: 0;
+// }
+
+// h1,
+// h2,
+// h3,
+// h4,
+// h5,
+// h6 {
+//   font-family: var(--font-stack) !important;
+// }
+
+// label {
+//   font-family: var(--font-stack);
+//   color: var(--marrow-dark);
+// }
+
+// .card-header {
+//   font-family: var(--font-stack);
+//   /* color: var(--marrow-accent); */
+//   /* background-color: var(--marrow-brand) !important; */
+// }
+
+// .btn {
+//   font-family: var(--font-stack);
+// }
+
+// .form-group label {
+//   display: block;
+//   margin-bottom: 10px;
+// }
+
+// .form-group {
+//   margin-bottom: 20px;
+// }
+
+.block-header {
+  color: #6161e4;
+}
+
+.property-header {
+  color: #24a754;
+}
+
+.command-header {
+  color: #d748a8;
+}
+
+.function-header {
+  color: #daae16;
+}
+
+.callback-header {
+  color: #e46161;
+}
+
+.global-var-header {
+  color: #82828c;
+}
+
+// p {
+//   font-family: var(--font-stack);
+// }
+
+// input {
+//   font-family: var(--font-stack) !important;
+// }
+
+// .badge {
+//   font-family: var(--font-stack);
+// }
+
+.reference__name {
+  font-family: $font-family-monospace;
+  display: inline-block;
+  // color: var(--marrow-dark);
+}
+
+.reference__type {
+  font-family: $font-family-monospace;
+  margin-left: 5px;
+  font-size: 12px;
+  color: #a09e9e;
+  font-style: italic;
+  font-variant-ligatures: normal;
+}
+
+.accordion:not(:last-of-type) h6 {
+  margin-bottom: 20px;
+}
+
+.accordion:last-of-type h6 {
+  margin-bottom: 0;
+}
+
+.accordion--open h6 {
+  margin-bottom: 15px !important;
+}
+
+.reference + hr:last-child {
+  display: none;
+}
+
+.reference__details:last-child {
+  margin-bottom: 0;
+}
+
+.CodeMirror {
+  border-bottom: 1px solid #ddd;
+  // border-right: 1px solid #ddd;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  overflow-y: hidden;
+  // border-radius: $border-radius;
+}
+
+// .btn-secondary {
+//   color: #212529 !important;
+//   background-color: rgba(0, 0, 0, 0.03) !important;
+//   border-color: rgba(0, 0, 0, 0.1) !important;
+// }

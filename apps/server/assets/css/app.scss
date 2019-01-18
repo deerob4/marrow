@@ -1,0 +1,111 @@
+/* This file is for your main application css. */
+
+@import "../../../../apps/editor/assets/css/app.scss";
+
+.action-button {
+  background-color: hsla(240, 100%, 82%, 1);
+  border-radius: 30px;
+  padding: 0 20px;
+}
+
+.no-focus-shadow:focus {
+  box-shadow: none
+}
+
+.logo {
+  font-family: reross-quadratic, sans-serif;
+  // margin-bottom: 0;
+}
+
+#host-app {
+  height: 100%;
+}
+
+.hero-container {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  background-color: #6161ff;
+  // background-image: url("/images/gridme.png");
+  // background-image: url("/images/280.jpg");
+  // background-image: url("/images/waves.jpg");
+  background-blend-mode: screen;
+  // background-blend-mode: color-burn;
+  background-size: cover;
+}
+
+.hero-modal {
+  border-radius: 10px;
+  background-color: #fafafa;
+  background-color: #fff;
+  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: auto;
+  padding: 25px;
+}
+
+.hero-modal__title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  // color: #0d0a0bc7 !important;
+  margin-bottom: 15px;
+}
+
+.host-success {
+  font-size: 1.4rem;
+}
+
+.host-success-message {
+  font-size: 1.25rem;
+}
+
+.hosted-url-container {
+  background-color: #ffffff !important;
+}
+
+.game-container {
+  display: grid;
+  grid-row-gap: 10px;
+}
+
+.game {
+  background-color: #f6e1e1;
+}
+
+.game-block-container {
+  display: grid;
+  grid-gap: 5px;
+  height: 300px;
+  overflow-y: visible;
+  grid-template-columns: repeat(auto-fit, 100px);
+  justify-items: center;
+}
+
+.game__thumbnail {
+  height: 150px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.yay {
+  background-color: #fff;
+}
+
+.game__title {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #0d0a0bc7 !important;
+  // font-family: gastromond;
+  // font-family: lexia;
+  font-weight: 300;
+}
+
+.game__author {
+  font-size: 1rem;
+  // font-family: gastromond;
+  // margin-bottom: 0;
+}
+
+.game__description {
+  // font-family: lexia;
+}

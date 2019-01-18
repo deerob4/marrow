@@ -1,0 +1,38 @@
+<div class="hero-modal">
+  <div class="hero-modal__top">
+    <h1 class="hero-modal__title">Værtsspil</h1>
+    <form>
+      <div class="form-group">
+        <select name="game" id="game" class="form-control">
+          <%= for game <- @games do %>
+            <option value="<%= game.id %>"><%= game.title %></option>
+          <% end %>
+        </select>
+      </div>
+    </form>
+  </div>
+
+  <div class="hero-modal__inner">
+    <div class="game-info">
+      <h3 class="game__title">Snakes and Ladders</h3>
+      <h4 class="game__author">By Dee Roberts</h4>
+      <p>Watch the world come to life in this fun new game! For <%= player_count %{min_players: 2, max_players: 10} %>.</p>
+    </div>
+
+    <form>
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="isPublic">
+        <label for="isPublic" class="form-check-label">Is public?</label>
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="allowSpectators">
+        <label for="allowSpectators" class="form-check-label">Allow spectators?</label>
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="requirePassword">
+        <label for="requirePassword" class="form-check-label">Require password?</label>
+      </div>
+      <button class="btn btn-primary mt-2">Host Game</button>
+    </form>
+  </div>
+</div>
