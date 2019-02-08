@@ -1,8 +1,7 @@
 import { action, createAsyncAction } from "typesafe-actions";
 import ActionType from "../constants";
 import { EditorConnect, CompilationSuccess } from "../types";
-import { Dispatch } from "redux";
-import { push } from "connected-react-router";
+
 
 export const connectToEditor = createAsyncAction(
   ActionType.EDITOR_CONNECT_REQUEST,

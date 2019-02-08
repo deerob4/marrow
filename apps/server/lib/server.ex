@@ -8,6 +8,7 @@ defmodule Server do
   """
 
   alias Server.Configuration
+  alias Server.GamesSupervisor
 
   @typedoc """
   A unique id at which every game can be accessed.
@@ -19,22 +20,17 @@ defmodule Server do
   given `game_id`.
   """
   @spec host_game(integer, map) :: {:ok, game_id}
-  def host_game(_source_id, config) do
+  def host_game(game_id, config) do
     cset = Configuration.changeset(%Configuration{}, config)
 
     if cset.valid? do
-      key = generate_key(32)
-      {:ok, key}
+      config = Ecto.Changeset.apply_changes(cset)
+      server_id = UUID.uuid4(:hex)
+      {:ok, _} = GamesSupervisor.start_game(game_id, server_id, config)
+      {:ok, server_id}
     else
       cset
     end
-  end
-
-  defp generate_key(length) do
-    length
-    |> :crypto.strong_rand_bytes()
-    |> Base.url_encode64()
-    |> binary_part(0, length)
   end
 
   @doc """

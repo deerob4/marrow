@@ -4,7 +4,6 @@ defmodule EditorWeb.EditorChannel do
   alias Editor.EditorServer
   alias Editor.EditorSupervisor
   alias Editor.Games
-  alias Language.Model
 
   def join("editor:" <> game_id, _params, socket) do
     socket = socket |> assign(:game_id, String.to_integer(game_id))
@@ -29,13 +28,18 @@ defmodule EditorWeb.EditorChannel do
     {:noreply, socket}
   end
 
+  def handle_in("toggle_public", _, socket) do
+    is_public = Games.toggle_visibility(socket.assigns.game_id)
+    {:reply, {:ok, %{isPublic: is_public}}, socket}
+  end
+
   def handle_info(:setup, socket) do
     game_id = socket.assigns.game_id
 
     DynamicSupervisor.start_child(EditorSupervisor, {EditorServer, game_id})
 
     {game, model, source} = Games.load_editor_data(game_id)
-
+    IO.inspect game
     # Some data is available whether the game has been compiled or not.
     available_data = %{
       editingGame: %{
@@ -80,7 +84,7 @@ defmodule EditorWeb.EditorChannel do
     Enum.map(metadata[key] || [], fn {coord, value} -> %{coord: coord, value: value} end)
   end
 
-  defp derived_data(%Model{metadata: metadata, board: board}) do
+  defp derived_data(%Language.Model{metadata: metadata, board: board}) do
     %{
       cards: [],
       labelTraits: format_metadata("labels", metadata),

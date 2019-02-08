@@ -53,23 +53,23 @@ export function loadGame(id: string) {
   };
 }
 
-export function recompileGame() {
-  return (dispatch: Dispatch, getState: () => AppState) => {
-    dispatch(recompileGameAction.request());
+// export function recompileGame() {
+//   return (dispatch: Dispatch, getState: () => AppState) => {
+//     dispatch(recompileGameAction.request());
 
-    const channel = getState().channels.editorChannel!;
+//     const channel = getState().channels.editorChannel!;
 
-    channel
-      .push("recompile", {})
-      .receive("ok", (data: IRecompileResponse) => {
-        dispatch(updateBoardStructure(data.board));
-        dispatch(recompileGameAction.success(data));
-      })
-      .receive("error", ({ reason }) =>
-        dispatch(recompileGameAction.failure(reason))
-      );
-  };
-}
+//     channel
+//       .push("recompile", {})
+//       .receive("ok", (data: IRecompileResponse) => {
+//         dispatch(updateBoardStructure(data.board));
+//         dispatch(recompileGameAction.success(data));
+//       })
+//       .receive("error", ({ reason }) =>
+//         dispatch(recompileGameAction.failure(reason))
+//       );
+//   };
+// }
 
 export function goToGameIndex() {
   return (dispatch: Dispatch) => {
@@ -88,12 +88,13 @@ export function editGameSource(gameId: string, newSource: string) {
 
 export function toggleIsPublic() {
   return (dispatch: Dispatch, getState: () => AppState) => {
+    console.log(getState())
     const channel = getState().channels.editorChannel!;
-
+    
     channel
-      .push("toggle_is_public", {})
-      .receive("ok", ({ isPublic }) =>
-        dispatch(toggleIsPublicAction(isPublic))
+    .push("toggle_is_public", {})
+    .receive("ok", ({ isPublic }) =>
+    dispatch(toggleIsPublicAction(isPublic))
       );
   };
 }

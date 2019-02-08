@@ -8,6 +8,7 @@ defmodule Server.Configuration do
 
   alias __MODULE__
 
+  @primary_key false
   schema "configuration" do
     field :is_public, :boolean
     field :allow_spectators, :boolean

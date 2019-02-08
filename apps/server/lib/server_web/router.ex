@@ -16,14 +16,12 @@ defmodule ServerWeb.Router do
   scope "/", ServerWeb do
     pipe_through :browser
 
-    get "/", GameController, :index
+    get "/", HostedGameController, :new
   end
 
   # Other scopes may use custom stacks.
   scope "/api", ServerWeb do
     pipe_through :api
-
     resources "/hosted-games", HostedGameController, only: [:create, :delete]
-    get "/games", GameController, :index
   end
 end

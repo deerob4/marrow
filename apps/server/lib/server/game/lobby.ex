@@ -14,33 +14,13 @@ defmodule Server.Game.Lobby do
 
   # Client
 
-  def start_link({_roles, _password} = args) do
-    GenServer.start_link(__MODULE__, args)
+  @spec start_link([role]) :: :ignore | {:error, any()} | {:ok, pid()}
+  def start_link(roles) do
+    GenServer.start_link(__MODULE__, roles)
   end
 
   defp via_tuple(game_id) do
     GamesRegistry.via_tuple({__MODULE__, game_id})
-  end
-
-  @doc """
-  Returns `true` if `password` matches the password required to
-  join the game, otherwise `false.`
-
-  If the game does not require a password to join, this function
-  will always return `true`.
-  """
-  @spec valid_password?(Game.server_id(), String.t()) :: boolean
-  def valid_password?(server_id, password) do
-    GenServer.call(server_id, {:valid_password?, password})
-  end
-
-  @doc """
-  Returns `true` if the game requires a password to join it,
-  otherwise `false`.
-  """
-  @spec requires_password?(Game.server_id()) :: boolean
-  def requires_password?(server_id) do
-    GenServer.call(server_id, :requires_password?)
   end
 
   @doc """
@@ -49,7 +29,7 @@ defmodule Server.Game.Lobby do
   """
   @spec list_roles(Game.server_id()) :: [role_info]
   def list_roles(server_id) do
-    GenServer.call(server_id, :list_roles)
+    GenServer.call(via_tuple(server_id), :list_roles)
   end
 
   @doc """
@@ -61,20 +41,23 @@ defmodule Server.Game.Lobby do
   """
   @spec select_role(Game.server_id(), role) :: select_role
   def select_role(server_id, role) do
-    GenServer.call(server_id, {:select_role, role})
+    GenServer.call(via_tuple(server_id), {:select_role, role})
   end
 
+  @doc """
+  Releases the previously taken `role`, allowing it to be
+  selected again by other players.
+  """
   @spec release_role(Game.server_id(), role) :: :ok
   def release_role(server_id, role) do
-    GenServer.cast(server_id, {:release_role, role})
+    GenServer.cast(via_tuple(server_id), {:release_role, role})
   end
 
   # Server
 
   @impl true
-  def init({roles, password}) do
+  def init(roles) do
     state = %{
-      password: password,
       roles: Map.new(roles, &{&1, :available})
     }
 
@@ -84,15 +67,6 @@ defmodule Server.Game.Lobby do
   @impl true
   def handle_call(:available_roles, _from, %{roles: roles} = state),
     do: {:reply, available_roles(roles), state}
-
-  def handle_call({:valid_password?, _password}, _from, %{password: nil} = state),
-    do: {:reply, true, state}
-
-  def handle_call({:valid_password?, password}, _from, %{password: pswd} = state),
-    do: {:reply, password === pswd, state}
-
-  def handle_call(:requires_password?, _from, %{password: password} = state),
-    do: {:reply, password !== nil, state}
 
   def handle_call({:select_role, role}, _from, %{roles: roles} = state) do
     case roles[role] do
@@ -123,9 +97,6 @@ defmodule Server.Game.Lobby do
 
   @spec available_roles(%{role => boolean}) :: [role]
   defp available_roles(roles) do
-    Enum.reduce(roles, [], fn
-      {_, :taken}, acc -> acc
-      {role, :available}, acc -> [role | acc]
-    end)
+    for {:available, role} <- roles, do: role
   end
 end

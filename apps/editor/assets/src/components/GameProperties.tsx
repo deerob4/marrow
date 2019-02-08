@@ -2,11 +2,10 @@ import * as React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { toggleIsPublic } from "../store/games/thunks";
-
 import FileUpload from "./FileUpload";
 import Card from "./Card";
 import { AppState } from "../types";
+import { toggleIsPublic } from "../actions/GameActions";
 
 const HeaderImage = styled.div`
   width: 100%;
@@ -25,7 +24,6 @@ interface Props {
 }
 
 const GameProperties: React.SFC<Props> = props => {
-  console.log(props);
   return (
     <Card title="Properties" headerType="outside">
       <div className="form-group">
@@ -43,13 +41,13 @@ const GameProperties: React.SFC<Props> = props => {
       <div className="form-group form-check">
         <input
           type="checkbox"
-          id="isPublic"
+          id="isPrivate"
           className="form-check-input"
           checked={props.isPublic || false}
           onChange={props.toggleIsPublic}
         />
-        <label htmlFor="isPublic" className="form-check-label">
-          Public?
+        <label htmlFor="isPrivate" className="form-check-label">
+          Game is public?
         </label>
       </div>
     </Card>
@@ -61,13 +59,13 @@ const mapStateToProps = (state: AppState) => {
   const game = state.gameMetadata.byId[gameId];
 
   return {
-    isPublic: !game.isPrivate,
+    isPublic: game.isPublic,
     headerImageUrl: game.coverUrl
   };
 };
 
 const mapDispatchToProps = {
-  toggleIsPublic
+  toggleIsPublic: toggleIsPublic.request
 };
 
 export default connect(

@@ -50,7 +50,7 @@ export type AfterLogin = {
 export type GameMetadata = {
   id: number;
   title: string;
-  isPrivate: boolean;
+  isPublic: boolean;
   coverUrl: string;
 };
 

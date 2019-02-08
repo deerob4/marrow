@@ -49,7 +49,7 @@ defmodule Server.GameState do
   The game state will be initialised according to how the model
   lays out the start of the game.
   """
-  @spec initialise(Model.t()) :: t
+  # @spec initialise(Model.t()) :: t
   def initialise(%Model{} = model) do
     {first_move, role_order} = generate_role_order(model.start_order, model.roles)
 
@@ -231,7 +231,7 @@ defmodule Server.GameState do
   @doc """
   Returns the list of the game's available roles.
   """
-  @spec roles(t) :: [role]
+  # @spec roles(t) :: [role]
   def roles(%GameState{role_positions: role_positions}) do
     Map.keys(role_positions)
   end

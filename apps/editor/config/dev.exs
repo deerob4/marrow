@@ -68,8 +68,9 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :editor, Editor.Repo,
-  username: System.get_env("MARROW_DB_USERNAME"),
-  password: System.get_env("MARROW_DB_PASSWORD"),
+  username: "dee",
+  password: "",
   database: "marrow_editor_dev",
+  show_sensitive_data_on_connection_error: true,
   hostname: "localhost",
   pool_size: 10

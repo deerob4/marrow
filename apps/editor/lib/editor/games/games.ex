@@ -37,7 +37,7 @@ defmodule Editor.Games do
     cset =
       Game.changeset(%Game{}, %{
         user_id: user_id,
-        is_private: true,
+        is_public: true,
         source: @default_source
       })
 
@@ -66,7 +66,7 @@ defmodule Editor.Games do
   and can be played.
   """
   def list_public_games() do
-    Repo.all(from g in Game, where: [is_private: false], preload: [:user])
+    Repo.all(from g in Game, where: [is_public: true], preload: [:user])
   end
 
   @doc """
@@ -84,6 +84,17 @@ defmodule Editor.Games do
   """
   def get_by_id!(game_id) do
     Repo.get!(Game, game_id)
+  end
+
+  @doc """
+  Toggles the `is_public` property of the game with the given
+  `game_id` and returns the new value.
+  """
+  def toggle_visibility(game_id) do
+    %Game{is_public: is_public} = game = Repo.get(Game, game_id)
+    cset = Game.changeset(game, %{is_public: not is_public})
+    %{is_public: is_public} = Repo.update!(cset)
+    is_public
   end
 
   @doc """

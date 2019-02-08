@@ -11,6 +11,7 @@ import {
 import ActionType from "../constants";
 import indexById from "../utils/indexById";
 import notEquals from "../utils/notEqual";
+import { notStrictEqual } from "assert";
 
 function byId(state: ById<GM> = {}, action: Action): ById<GM> {
   switch (action.type) {
@@ -33,6 +34,13 @@ function byId(state: ById<GM> = {}, action: Action): ById<GM> {
       } else {
         return state;
       }
+
+    case ActionType.TOGGLE_GAME_VISIBILITY_RESULT:
+      return assocPath(
+        [action.payload.gameId, "isPublic"],
+        action.payload.isPublic,
+        state
+      );
 
     default:
       return state;

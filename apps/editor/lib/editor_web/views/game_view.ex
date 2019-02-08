@@ -18,10 +18,10 @@ defmodule EditorWeb.GameView do
       title: game.title,
       description: game.description,
       source: game.source,
-      is_private: game.is_private,
+      is_public: game.is_public,
       min_players: game.min_players,
       max_players: game.max_players,
-      author: game[:user][:name],
+      author: game.user.name,
       cover_image: game.cover_image}
   end
 
@@ -29,6 +29,7 @@ defmodule EditorWeb.GameView do
     %{id: game.id,
       title: game.title,
       description: game.description,
-      coverUrl: game.cover_image}
+      coverUrl: game.cover_image,
+      isPublic: game.is_public}
   end
 end

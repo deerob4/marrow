@@ -11,7 +11,11 @@ import {
 } from "../actions/EditorActions";
 import { socketConnected, socketDropped } from "../actions/SocketActions";
 import { push } from "connected-react-router";
-import { uploadImage, uploadAudio, deleteImage, renameImage } from "../actions/AssetActions";
+import {
+  uploadImage,
+  uploadAudio,
+} from "../actions/AssetActions";
+import { toggleIsPublic } from "../actions/GameActions";
 
 type Store = MiddlewareAPI<Next, AppState>;
 type Next = Dispatch<Action>;
@@ -74,6 +78,15 @@ const socketMiddleware: Middleware = (store: Store) => (next: Next) => (
           source: action.payload.newSource
         });
       }
+      break;
+
+    case ActionType.TOGGLE_GAME_VISIBILITY_REQUEST:
+      editorChannel
+        .push("toggle_public", {})
+        .receive("ok", ({ isPublic }) => {
+          const gameId = getState().editingGame.metadataId;
+          dispatch(toggleIsPublic.result(isPublic, gameId));
+        });
       break;
 
     case ActionType.RECOMPILE_REQUEST:

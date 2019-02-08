@@ -40,7 +40,7 @@ defmodule Editor.MixProject do
       {:phoenix, "~> 1.4.0-rc"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0-rc"},
+      {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0-rc"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2-rc", only: :dev},
@@ -53,7 +53,8 @@ defmodule Editor.MixProject do
       {:ex_aws_s3, "~> 2.0"},
       {:sweet_xml, "~> 0.6"},
       {:hackney, "~> 1.9"},
-      {:elixir_uuid, "~> 1.2"}
+      {:elixir_uuid, "~> 1.2"},
+      {:decimal, "~> 1.0"}
     ]
   end
 

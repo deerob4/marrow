@@ -34,6 +34,10 @@ export const deleteGame = createAsyncAction(
 /**
  * Negates the `isPrivate` property of the game.
  */
-export const toggleIsPrivate = action(ActionType.TOGGLE_IS_PRIVATE);
+export const toggleIsPublic = {
+  request: () => action(ActionType.TOGGLE_GAME_VISIBILITY_REQUEST),
+  result: (isPublic: boolean, gameId: number) =>
+    action(ActionType.TOGGLE_GAME_VISIBILITY_RESULT, { isPublic, gameId })
+};
 
-export const loadGame = (gameId: number) => push(`/games/${gameId}`)
+export const loadGame = (gameId: number) => push(`/games/${gameId}`);

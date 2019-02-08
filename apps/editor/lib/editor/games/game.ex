@@ -16,7 +16,7 @@ defmodule Editor.Games.Game do
     field :source, :string
     field :min_players, :integer
     field :max_players, :integer
-    field :is_private, :boolean
+    field :is_public, :boolean
     field :cover_image, :string
 
     belongs_to :user, User
@@ -29,7 +29,7 @@ defmodule Editor.Games.Game do
 
   def changeset(struct = %Game{}, params \\ %{}) do
     struct
-    |> cast(params, [:user_id, :source, :is_private])
+    |> cast(params, [:user_id, :source, :is_public])
     |> validate_required([:source])
     |> extract_fields()
   end

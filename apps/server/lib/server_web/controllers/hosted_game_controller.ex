@@ -9,9 +9,14 @@ defmodule ServerWeb.HostedGameController do
   use ServerWeb, :controller
 
   alias Server
+  alias Editor.Games
+
+  def new(conn, _) do
+    games = Games.list_public_games()
+    render(conn, "index.html", games: games)
+  end
 
   def create(conn, %{"game_id" => game_id, "configuration" => config_params}) do
-    IO.inspect config_params
     with {:ok, id} <- Server.host_game(game_id, config_params) do
       render(conn, "created.json", id: id)
     end

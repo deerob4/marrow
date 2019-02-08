@@ -19,7 +19,7 @@ export const GameInfo: React.SFC<Game> = game => {
   return (
     <div className="game-info">
       <h3 className="game__title">{game.title}</h3>
-      <h4 className="game__author">{game.author}</h4>
+      <h4 className="game__author">By {game.author}</h4>
       <p className="game__description">{description(game)}</p>
     </div>
   );

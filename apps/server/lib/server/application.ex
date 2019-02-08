@@ -10,7 +10,9 @@ defmodule Server.Application do
     children = [
       # Start the endpoint when the application starts
       Server.GamesRegistry,
-      ServerWeb.Endpoint
+      ServerWeb.Endpoint,
+      Server.GamesSupervisor,
+      Server.Presence
       # Starts a worker by calling: Server.Worker.start_link(arg)
       # {Server.Worker, arg},
     ]

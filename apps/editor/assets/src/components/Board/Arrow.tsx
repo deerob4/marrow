@@ -13,7 +13,7 @@ const ArrowParent = styled.div`
 `;
 
 const UpArrow = styled(ArrowParent)`
-  margin-left: -5px;
+  margin-left: -7px;
   margin-top: ${(props: ILineStyle) => lineWidth(props) / 2 - 17 + "px"};
 `;
 
@@ -25,13 +25,13 @@ const DownArrow = styled(ArrowParent)`
 
 const LeftArrow = styled(ArrowParent)`
   transform: rotate(270deg) scale(1.2);
-  margin-top: -10px;
+  margin-top: -8px;
   margin-left: ${(props: ILineStyle) => lineWidth(props) / 2 - 4 + "px"};
 `;
 
 const RightArrow = styled(ArrowParent)`
   transform: rotate(90deg) scale(1.2);
-  margin-top: -12px;
+  margin-top: -14px;
   margin-left: ${(props: ILineStyle) => lineWidth(props) / 2 - 12 + "px"};
 `;
 
