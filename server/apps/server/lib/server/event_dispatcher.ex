@@ -23,7 +23,7 @@ defmodule Server.EventDispatcher do
   Dispatches `event` on the game `state`, returning the updated
   state if successful.
   """
-  @spec dispatch(event, GameState.t()) :: GameState.state_update
+  @spec dispatch(event, GameState.t()) :: GameState.state_update()
   def dispatch(event, state)
 
   # Moving to a new tile: [move_to: [{:var, [:"?current_player"]}, {2, 3}]]

@@ -145,6 +145,7 @@ defmodule ServerWeb.GameChannel do
   @impl true
   def handle_info(:join_presence, socket) do
     push(socket, "presence_state", Presence.list(socket))
+
     {:ok, _} =
       Presence.track(socket, socket.assigns.user_id, %{
         role: socket.assigns.role
@@ -168,9 +169,8 @@ defmodule ServerWeb.GameChannel do
     :ok = Lobby.release_role(socket.assigns.game_id, role)
     broadcast_from(socket, "lobby:role_released", %{role: role})
   end
+
   def terminate(reason, socket) do
-    IO.inspect(reason)
-    IO.inspect(socket.assigns)
     :ok
   end
 end

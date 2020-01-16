@@ -13,7 +13,6 @@ defmodule ServerBenchmark.Client do
     {:ok, {game_pid, max_messages, 0}}
   end
 
-
   def handle_info(:talk_to_server, {game_pid, max_messages, count}) do
     next_message = Enum.random(1000..5000)
     Process.send_after(self(), :talk_to_server, next_message)

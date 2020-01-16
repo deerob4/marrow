@@ -28,7 +28,7 @@ defmodule Server.GamesSupervisor do
   Returns a list of all the games, in the form
   `{server_id, stage, state}`.
   """
-  @spec list_games() :: [{Game.server_id(),  Game.stage(), map}]
+  @spec list_games() :: [{Game.server_id(), Game.stage(), map}]
   def list_games() do
     Enum.map(GameMonitor.list_keys(), &game_info/1)
   end
@@ -36,10 +36,12 @@ defmodule Server.GamesSupervisor do
   defp game_info(server_id) do
     case Game.join_payload(server_id) do
       %{stage: :lobby, game_metadata: metadata, started_at: time} ->
-        {server_id, :lobby, Map.merge(%{started_at: time}, Map.merge(metadata, Game.Lobby.join_payload(server_id)))}
+        {server_id, :lobby,
+         Map.merge(%{started_at: time}, Map.merge(metadata, Game.Lobby.join_payload(server_id)))}
 
       %{stage: :in_progress, game_metadata: metadata, started_at: time} ->
-        {server_id, :in_progress, Map.merge(%{started_at: time}, Map.merge(metadata, Game.state_payload(server_id)))}
+        {server_id, :in_progress,
+         Map.merge(%{started_at: time}, Map.merge(metadata, Game.state_payload(server_id)))}
     end
   end
 

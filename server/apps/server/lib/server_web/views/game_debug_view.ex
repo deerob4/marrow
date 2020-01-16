@@ -12,6 +12,6 @@ defmodule ServerWeb.GameDebugView do
       end)
 
     # Remove last comma
-    String.slice str, 0..-2
+    String.slice(str, 0..-2)
   end
 end

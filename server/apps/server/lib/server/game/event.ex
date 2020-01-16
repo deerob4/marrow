@@ -29,23 +29,23 @@ defmodule Server.Game.Event do
     defp event_type(_), do: "normal"
   end
 
-  defmodule JoinEvent, do: defstruct []
+  defmodule JoinEvent, do: defstruct([])
 
-  defmodule LeaveEvent, do: defstruct []
+  defmodule LeaveEvent, do: defstruct([])
 
-  defmodule MissTurnEvent, do: defstruct []
+  defmodule MissTurnEvent, do: defstruct([])
 
-  defmodule RollEvent, do: defstruct [:rolled]
+  defmodule RollEvent, do: defstruct([:rolled])
 
-  defmodule MovementEvent, do: defstruct [:spaces_moved, :prev_tile, :new_tile]
+  defmodule MovementEvent, do: defstruct([:spaces_moved, :prev_tile, :new_tile])
 
-  defmodule MessageEvent, do: defstruct [:from, :body]
+  defmodule MessageEvent, do: defstruct([:from, :body])
 
-  defmodule GlobalVariableEvent, do: defstruct [:variable, :new_value]
+  defmodule GlobalVariableEvent, do: defstruct([:variable, :new_value])
 
-  defmodule PlayerVariableEvent, do: defstruct [:variable, :new_value]
+  defmodule PlayerVariableEvent, do: defstruct([:variable, :new_value])
 
-  defmodule CardEvent, do: defstruct [:player, :card, :choice]
+  defmodule CardEvent, do: defstruct([:player, :card, :choice])
 
   defstruct [:turn, :player, :event]
 

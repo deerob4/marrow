@@ -364,8 +364,6 @@ defmodule Language.Interpreter do
 
   # Unknown global variable
   defp resolve_var({:var, [var_name]}, _vars) do
-    IO.inspect "FUCK YOU"
-    IO.inspect var_name
     {:error, "unknown global variable `#{format_identifier(var_name)}`"}
   end
 

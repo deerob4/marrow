@@ -14,7 +14,8 @@ defmodule EditorWeb.GameView do
   end
 
   def render("show.json", %{game: game}) do
-    %{id: game.id,
+    %{
+      id: game.id,
       title: game.title,
       description: game.description,
       source: game.source,
@@ -22,14 +23,17 @@ defmodule EditorWeb.GameView do
       min_players: game.min_players,
       max_players: game.max_players,
       author: game.user.name,
-      cover_image: game.cover_image}
+      cover_image: game.cover_image
+    }
   end
 
   def render("simple.json", %{game: game}) do
-    %{id: game.id,
+    %{
+      id: game.id,
       title: game.title,
       description: game.description,
       coverUrl: game.cover_image,
-      isPublic: game.is_public}
+      isPublic: game.is_public
+    }
   end
 end

@@ -13,7 +13,6 @@ defmodule Editor.TestHelpers do
   end
 
   def game_fixture(user_id, _attrs \\ %{}) do
-
     {:ok, game} = Games.create_game(user_id)
 
     game

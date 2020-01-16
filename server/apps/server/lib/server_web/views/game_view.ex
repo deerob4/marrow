@@ -35,8 +35,4 @@ defmodule ServerWeb.GameView do
   defp player_count(%{min_players: same, max_players: same}), do: "#{same} players"
   defp player_count(%{min_players: min, max_players: max}), do: "#{min} - #{max} players"
 
-
-  # def handle_event("change_game", %{"game_id" => game_id}, socket) do
-  #   {:ok, assign(socket, :game_id, game_id)}
-  # end
 end

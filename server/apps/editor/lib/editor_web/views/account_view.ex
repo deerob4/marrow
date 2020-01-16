@@ -2,8 +2,6 @@ defmodule EditorWeb.AccountView do
   use EditorWeb, :view
 
   def render("created.json", %{user: user, game: game, token: token}) do
-    IO.inspect user
-    IO.inspect game
     %{
       message: "created",
       data: %{

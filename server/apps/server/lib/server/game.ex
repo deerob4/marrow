@@ -245,11 +245,10 @@ defmodule Server.Game do
         {:pick_card_action, action_id},
         %{id: id, game_state: game, turn_stage: :choosing_card} = state
       ) do
-
     Endpoint.broadcast("game:#{id}", "game:hide_card", %{})
+
     game
     |> GameState.pick_card_action(action_id)
-    |> IO.inspect
     |> handle_state_change(state)
   end
 

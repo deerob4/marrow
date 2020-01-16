@@ -31,7 +31,8 @@ defmodule Server.Game.Supervisor do
 
     children = [
       {Server.Game, {model, server_id, config}},
-      {Server.Game.Lobby, {server_id, roles, config.wait_time, {model.min_players, model.max_players}}},
+      {Server.Game.Lobby,
+       {server_id, roles, config.wait_time, {model.min_players, model.max_players}}},
       {Server.Game.UserList, server_id}
     ]
 

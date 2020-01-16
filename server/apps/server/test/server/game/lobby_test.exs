@@ -65,9 +65,9 @@ defmodule Server.Game.LobbyTest do
     assert :ok = Lobby.release_role(lobby, "a")
 
     assert Lobby.list_roles(lobby) === [
-      %{name: "a", available?: true},
-      %{name: "b", available?: true},
-      %{name: "c", available?: true}
-    ]
+             %{name: "a", available?: true},
+             %{name: "b", available?: true},
+             %{name: "c", available?: true}
+           ]
   end
 end

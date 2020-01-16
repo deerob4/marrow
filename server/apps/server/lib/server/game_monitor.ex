@@ -23,7 +23,7 @@ defmodule Server.GameMonitor do
   end
 
   @impl true
-  def handle_call(:list_games, _from , games) do
+  def handle_call(:list_games, _from, games) do
     {:reply, Map.values(games), games}
   end
 

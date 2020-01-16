@@ -25,11 +25,10 @@ defmodule Server.Game.Turn do
   # Server
 
   def init({game, turn_time_limit}) when is_integer(turn_time_limit) do
-    {:ok, :dice, game, [{:state_timeout, turn_time_limit,:dice_timeout }]}
+    {:ok, :dice, game, [{:state_timeout, turn_time_limit, :dice_timeout}]}
   end
 
   def init({game, _turn_time_limit}) do
-
   end
 
   def handle_event({:call, from}, :roll, _state, game) do
@@ -42,6 +41,6 @@ defmodule Server.Game.Turn do
   # end
 
   def handle_event(:state_timeout, :dice_timeout, :dice, _game) do
-    IO.inspect "The dice timeout occured. I will now crash"
+    IO.inspect("The dice timeout occured. I will now crash")
   end
 end

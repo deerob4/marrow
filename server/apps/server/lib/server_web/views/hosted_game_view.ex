@@ -41,5 +41,4 @@ defmodule ServerWeb.HostedGameView do
   defp player_count(%{min_players: 1, max_players: 1}), do: "1 player"
   defp player_count(%{min_players: same, max_players: same}), do: "#{same} players"
   defp player_count(%{min_players: min, max_players: max}), do: "#{min} - #{max} players"
-
 end
