@@ -1,4 +1,4 @@
-enum BaseType {
+enum ScalarType {
   String = "string",
   Bool = "bool",
   Int = "int",
@@ -8,9 +8,9 @@ enum BaseType {
   Any = "any"
 }
 
-interface Base {
-  kind: "base";
-  type: BaseType;
+interface Scalar {
+  kind: "scalar";
+  type: ScalarType;
 }
 
 interface Or {
@@ -34,35 +34,35 @@ interface Pair {
   second: MarrowType;
 }
 
-type MarrowType = Base | Or | List | Identifier | Pair;
+type MarrowType = Scalar | Or | List | Identifier | Pair;
 
 const Types = {
-  int(): Base {
-    return { kind: "base", type: BaseType.Int };
+  int(): Scalar {
+    return { kind: "scalar", type: ScalarType.Int };
   },
 
-  string(): Base {
-    return { kind: "base", type: BaseType.String };
+  string(): Scalar {
+    return { kind: "scalar", type: ScalarType.String };
   },
 
-  bool(): Base {
-    return { kind: "base", type: BaseType.Bool };
+  bool(): Scalar {
+    return { kind: "scalar", type: ScalarType.Bool };
   },
 
-  tile(): Base {
-    return { kind: "base", type: BaseType.Tile };
+  tile(): Scalar {
+    return { kind: "scalar", type: ScalarType.Tile };
   },
 
-  role(): Base {
-    return { kind: "base", type: BaseType.Role };
+  role(): Scalar {
+    return { kind: "scalar", type: ScalarType.Role };
   },
 
-  atom(): Base {
-    return { kind: "base", type: BaseType.Atom };
+  atom(): Scalar {
+    return { kind: "scalar", type: ScalarType.Atom };
   },
 
-  any(): Base {
-    return { kind: "base", type: BaseType.Any };
+  any(): Scalar {
+    return { kind: "scalar", type: ScalarType.Any };
   },
 
   list(type: MarrowType): List {
@@ -84,7 +84,7 @@ const Types = {
 
 function typeToString(type: MarrowType): string {
   switch (type.kind) {
-    case "base":
+    case "scalar":
       return type.type;
     case "identifier":
       return type.value;

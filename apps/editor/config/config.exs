@@ -27,7 +27,9 @@ config :phoenix, :json_library, Jason
 
 config :ex_aws,
   region: "eu-west-2",
-  debug_requests: true
+  debug_requests: true,
+  access_key_id: "AKIAJTDIP5ITBI5TPGNA",
+  secret_key_id: "th09n8c6k372TXP68XC187uMpzR9h"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

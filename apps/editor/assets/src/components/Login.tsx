@@ -17,7 +17,7 @@ interface Props {
   signedOut: boolean;
 }
 
-const Login: React.SFC<Props> = props => {
+const Login: React.FC<Props> = props => {
   useTitle("Sign In");
 
   const { data, errors, handleInput, handleSubmit } = useForm<LoginCredentials>(
@@ -94,4 +94,5 @@ const mapDispatchToProps = { login };
 export default connect(
   mapStateToProps,
   mapDispatchToProps
+  // @ts-ignore
 )(Login);

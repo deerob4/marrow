@@ -12,7 +12,7 @@ defmodule Language do
 
   @type compile_result :: {:ok, Model.t()} | {:error, String.t()}
 
-  @typep role :: String.t()
+  @type role :: String.t()
 
   @type variable :: Board.tile() | role | integer | boolean | String.t()
 
@@ -35,6 +35,12 @@ defmodule Language do
       {:error, {line, :marrow_parser, error_list}} ->
         error = error_list |> Enum.join()
         {:error, "Line #{line}: #{error}"}
+    end
+  end
+
+  def initialise_state(source) do
+    with {:ok, model} <- to_game(source) do
+      Server.GameState.initialise(model, Map.keys(model.roles))
     end
   end
 

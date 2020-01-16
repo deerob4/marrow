@@ -14,4 +14,11 @@ defmodule EditorWeb.FallbackController do
     |> put_view(EditorWeb.ErrorView)
     |> render("unauthorised.json")
   end
+
+  def call(conn, {:error, %Ecto.Changeset{} = cset}) do
+    conn
+    |> put_status(500)
+    |> put_view(EditorWeb.ChangesetView)
+    |> render("error.json", changeset: cset)
+  end
 end

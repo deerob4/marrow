@@ -1,0 +1,47 @@
+
+<div class="ml2 mt2">
+  <div class="flex mb3">
+    <h1 class="f2 sans-serif ma0">Active Games</h1>
+    <button class="ml3 sans-serif" phx-click="terminate_all">Terminate All</button>
+    <button class="ml3 sans-serif" phx-click="refresh">Refresh</button>
+  </div>
+
+  <%= if length(@games) > 0 do %>
+    <%= for {server_id, stage, game} <- @games do %>
+      <div class="game mb4">
+        <h1 class="mb0 mt1 sans-serif">
+          <span class="f3 fw4"><%= game.title %></span>
+          <span class="f6 fw1">(<%= server_id %>)</span>
+        </h1>
+        <% time = game.started_at %>
+        <p class="sans-serif mt1 mb0">Started at: <%= format_start_time(game.started_at) %> </p>
+        <p class="sans-serif mt1 mb0">Stage: <%= stage %></p>
+
+        <%= case stage do %>
+          <% :lobby -> %>
+            <p class="sans-serif mt1 mb0">Min players reached: <%= game.min_players_reached? %></p>
+            <p class="sans-serif mt1 mb0">Countdown: <%= game.countdown %></p>
+          
+          <% :in_progress -> %>
+            <p class="sans-serif mt1 mb0">Turn: <%= game.game_state.current_turn %></p>
+            <p class="sans-serif mt1 mb0">Active role: <%= game.game_state.active_role %></p>
+            <p class="sans-serif mt1 mb0">In game: <%= Enum.join(Map.keys(game.game_state.roles), " ") %></p>
+            <p class="sans-serif mt1 mb0">Variables: <%= inspect(game.game_state.variables) %></p>
+            <p class="sans-serif mt1 mb0">Player positions: <%= format_role_positions(game.game_state.role_positions) %></p>
+        <% end %>
+
+        <button class="sans-serif mt2" phx-click="terminate_game" phx-value="<%= server_id %>">
+          Terminate
+        </button>
+
+        <a href="http://localhost:9500/<%= server_id %>" target="_blank">
+          <button class="sans-serif mt2">
+            Go to game
+          </button>
+        </a>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="f3 mt2 sans-serif">No games running.</p>
+  <% end %>
+</div>

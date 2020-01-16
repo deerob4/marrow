@@ -7,6 +7,7 @@ export interface Config {
   isPublic: boolean;
   allowSpectators: boolean;
   password: string | null;
+  waitTime: number;
 }
 
 interface FormState extends Config {
@@ -16,7 +17,8 @@ interface FormState extends Config {
 enum ConfigMsg {
   SetIsPublic = "SET_IS_PUBLIC",
   SetAllowSpectators = "SET_ALLOW_SPECTATORS",
-  SetPassword = "SET_PASSWORD"
+  SetPassword = "SET_PASSWORD",
+  SetWaitTime = "SET_WAIT_TIME"
 }
 
 const ConfigActions = {
@@ -28,6 +30,9 @@ const ConfigActions = {
   },
   setAllowSpectators(allowSpectators: boolean) {
     return action(ConfigMsg.SetAllowSpectators, allowSpectators);
+  },
+  setWaitTime(waitTime: number) {
+    return action(ConfigMsg.SetWaitTime, waitTime);
   }
 };
 
@@ -36,7 +41,12 @@ type ConfigAction = ActionType<typeof ConfigActions>;
 function updateConfig(config: FormState, action: ConfigAction): FormState {
   switch (action.type) {
     case ConfigMsg.SetIsPublic:
-      return { ...config, isPublic: action.payload, isValid: true, password: null };
+      return {
+        ...config,
+        isPublic: action.payload,
+        isValid: true,
+        password: null
+      };
 
     case ConfigMsg.SetAllowSpectators:
       return { ...config, allowSpectators: action.payload };
@@ -47,6 +57,14 @@ function updateConfig(config: FormState, action: ConfigAction): FormState {
         password: action.payload,
         isValid: action.payload === null || action.payload.length >= 6
       };
+
+    case ConfigMsg.SetWaitTime:
+      let waitTime = action.payload;
+      return {
+        ...config,
+        waitTime,
+        isValid: waitTime >= 5 && waitTime <= 120
+      };
   }
 }
 
@@ -54,7 +72,8 @@ const defaultConfig: FormState = {
   isPublic: false,
   allowSpectators: false,
   password: null,
-  isValid: true
+  isValid: true,
+  waitTime: 60
 };
 
 interface ConfigProps {
@@ -63,7 +82,12 @@ interface ConfigProps {
 }
 
 export const ConfigForm: React.SFC<ConfigProps> = props => {
-  const { setIsPublic, setAllowSpectators, setPassword } = ConfigActions;
+  const {
+    setIsPublic,
+    setAllowSpectators,
+    setPassword,
+    setWaitTime
+  } = ConfigActions;
   const [config, dispatch] = useReducer(updateConfig, defaultConfig);
 
   function onRequirePassword(e: React.FormEvent<HTMLInputElement>) {
@@ -104,7 +128,9 @@ export const ConfigForm: React.SFC<ConfigProps> = props => {
             className="form-check-input"
             id="allowSpectators"
             checked={config.allowSpectators}
-            onChange={e => dispatch(setAllowSpectators(e.currentTarget.checked))}
+            onChange={e =>
+              dispatch(setAllowSpectators(e.currentTarget.checked))
+            }
           />
           <label htmlFor="allowSpectators" className="form-check-label">
             Allow spectators?
@@ -137,6 +163,24 @@ export const ConfigForm: React.SFC<ConfigProps> = props => {
             />
           </div>
         )}
+
+        <div className="form-group mb-2 mt-3">
+          <label htmlFor="waitTime">Seconds between the minimum player count being reached and the game starting (5 - 120):</label>
+
+          <input
+            type="number"
+            id="waitTime"
+            value={config.waitTime}
+            min="5"
+            max="120"
+            className="form-control"
+            onChange={e => {
+              const waitTime = e.currentTarget.value;
+              const waitTimeInt = parseInt(waitTime, 10) || 5;
+              dispatch(setWaitTime(waitTimeInt))
+            }}
+          />
+        </div>
 
         <SpinnerButton
           className="mt-2"

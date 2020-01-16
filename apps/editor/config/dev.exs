@@ -17,6 +17,7 @@ config :editor, EditorWeb.Endpoint,
       "--mode",
       "development",
       "--watch-stdin",
+      "--color",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]
@@ -74,3 +75,9 @@ config :editor, Editor.Repo,
   show_sensitive_data_on_connection_error: true,
   hostname: "localhost",
   pool_size: 10
+
+config :ex_aws,
+  region: "eu-west-2",
+  debug_requests: true,
+  access_key_id: "AKIAJTDIP5ITBI5TPGNA",
+  secret_key_id: "th09n8c6k372TXP68XC187uMpzR9h"

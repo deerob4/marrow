@@ -18,7 +18,7 @@ module.exports = (env, options) => ({
     ]
   },
   entry: {
-    app: "./src/index.tsx"
+    app: "./src/index.tsx",
   },
   output: {
     filename: "[name].js",
@@ -45,7 +45,7 @@ module.exports = (env, options) => ({
       },
       {
         test: /\.tsx?$/,
-        loader: "ts-loader",
+        loader: "awesome-typescript-loader",
         options: {
           getCustomTransformers: () => ({
             before: [styledComponentsTransformer]
@@ -55,7 +55,10 @@ module.exports = (env, options) => ({
     ]
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js"],
+    alias: {
+      "react-dom": "@hot-loader/react-dom"
+    }
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: "../css/app.css" }),

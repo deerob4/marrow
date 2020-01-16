@@ -4,7 +4,9 @@ defmodule Server.Game.Lobby do
   """
 
   use GenServer
+
   alias Server.{Game, GamesRegistry}
+  alias ServerWeb.Endpoint
 
   @typep role :: String.t()
 
@@ -12,24 +14,42 @@ defmodule Server.Game.Lobby do
 
   @type select_role :: :ok | {:error, :already_taken}
 
+  @type join_payload :: %{
+          roles: [role_info],
+          countdown: integer | nil,
+          min_players_reached?: boolean
+        }
+
+  @typep role_status :: :available | :taken
+
   # Client
 
-  @spec start_link([role]) :: :ignore | {:error, any()} | {:ok, pid()}
-  def start_link(roles) do
-    GenServer.start_link(__MODULE__, roles)
+  def start_link({server_id, _roles, _wait_time, _player_counts} = params) do
+    GenServer.start_link(__MODULE__, params, name: via_tuple(server_id))
   end
 
-  defp via_tuple(game_id) do
-    GamesRegistry.via_tuple({__MODULE__, game_id})
+  @doc false
+  def via_tuple(server_id) do
+    GamesRegistry.via_tuple({__MODULE__, server_id})
   end
 
   @doc """
-  Returns a list of all the roles and whether or not they are
-  available to play as.
+  Returns a payload containing information about the state of
+  the lobby. See `t:join_payload` for more information.
+
+  The payload will include the following values:
+
+    * `min_players_reached?` - whether or not the minimum number
+      of players required for the game to start have joined the
+      lobby and confirmed a role.
+
+    * `countdown` - the number of seconds left until the game is
+      due to begin, or `nil` if not enough players have joined.
+
   """
-  @spec list_roles(Game.server_id()) :: [role_info]
-  def list_roles(server_id) do
-    GenServer.call(via_tuple(server_id), :list_roles)
+  @spec join_payload(Game.server_id()) :: join_payload
+  def join_payload(server_id) do
+    GenServer.call(via_tuple(server_id), :join_payload)
   end
 
   @doc """
@@ -53,50 +73,112 @@ defmodule Server.Game.Lobby do
     GenServer.cast(via_tuple(server_id), {:release_role, role})
   end
 
+  def reset(server_id), do: GenServer.cast(via_tuple(server_id), :reset)
+
   # Server
 
   @impl true
-  def init(roles) do
+  def init({server_id, roles, wait_time, {min_players, max_players}}) do
     state = %{
-      roles: Map.new(roles, &{&1, :available})
+      server_id: server_id,
+      min_players: min_players,
+      max_players: max_players,
+      min_players_reached?: false,
+      roles:
+        Map.new(roles, fn %{name: name, repr: {repr_type, repr_value}} ->
+          {name, %{status: :available, repr: %{type: repr_type, value: repr_value}}}
+        end),
+      countdown: wait_time,
+      timer_ref: nil,
+      # So we can reset it if the countdown gets cancelled.
+      wait_time: wait_time
     }
 
     {:ok, state}
   end
 
   @impl true
-  def handle_call(:available_roles, _from, %{roles: roles} = state),
-    do: {:reply, available_roles(roles), state}
-
   def handle_call({:select_role, role}, _from, %{roles: roles} = state) do
     case roles[role] do
-      :available ->
-        {:reply, :ok, %{state | roles: Map.put(roles, role, :taken)}}
+      %{status: :available} ->
+        roles = put_in(roles, [role, :status], :taken)
 
-      :taken ->
+        if not state.min_players_reached? and min_players_reached?(roles, state.min_players) do
+          send(self(), :min_players_reached)
+        end
+
+        {:reply, :ok, %{state | roles: roles}}
+
+      %{status: :taken} ->
         {:reply, {:error, :already_taken}, state}
     end
   end
 
-  def handle_call(:list_roles, _from, %{roles: roles} = state) do
-    role_info =
-      Enum.map(roles, fn {name, status} ->
-        %{
-          name: name,
-          available?: status === :available
-        }
-      end)
+  def handle_call(:join_payload, _from, %{roles: roles, countdown: countdown} = state) do
+    payload = %{
+      roles: list_roles(roles),
+      countdown: countdown,
+      min_players_reached?: state.min_players_reached?
+    }
 
-    {:reply, role_info, state}
+    {:reply, payload, state}
   end
 
   @impl true
   def handle_cast({:release_role, role}, %{roles: roles} = state) do
-    {:noreply, %{state | roles: Map.put(roles, role, :available)}}
+    roles = put_in(roles, [role, :status], :available)
+    taken_count = taken_role_count(roles)
+
+    if taken_count < state.min_players && state.min_players_reached? do
+      send(self(), :cancel_countdown)
+    end
+
+    {:noreply, %{state | roles: roles, min_players_reached?: taken_count >= state.min_players}}
   end
 
-  @spec available_roles(%{role => boolean}) :: [role]
-  defp available_roles(roles) do
-    for {:available, role} <- roles, do: role
+  @impl true
+  def handle_info(:min_players_reached, %{server_id: server_id} = state) do
+    :ok = Endpoint.broadcast("game:#{server_id}", "lobby:min_players_reached", %{})
+    send(self(), :countdown)
+    {:noreply, %{state | min_players_reached?: true}}
+  end
+
+  def handle_info(:countdown, %{countdown: 0, server_id: server_id} = state) do
+    :ok = Game.begin_game(server_id)
+    {:noreply, state}
+  end
+
+  def handle_info(:countdown, %{countdown: countdown, server_id: server_id} = state) do
+    countdown = countdown - 1
+    timer_ref = Process.send_after(self(), :countdown, 1000)
+    :ok = Endpoint.broadcast("game:#{server_id}", "lobby:countdown", %{countdown: countdown})
+    {:noreply, %{state | countdown: countdown, timer_ref: timer_ref}}
+  end
+
+  def handle_info(:cancel_countdown, %{timer_ref: timer_ref, server_id: server_id} = state) do
+    :ok = Endpoint.broadcast("game:#{server_id}", "lobby:countdown_cancelled", %{})
+    Process.cancel_timer(timer_ref)
+    {:noreply, %{state | timer_ref: nil, countdown: state.wait_time}}
+  end
+
+  def handle_info(_, state) do
+    {:noreply, state}
+  end
+
+  @spec min_players_reached?(%{role => role_status}, integer) :: boolean
+  defp min_players_reached?(roles, min_players) do
+    taken_role_count(roles) >= min_players
+  end
+
+  @spec list_roles(%{role => role_status}) :: [role_info]
+  defp list_roles(roles) do
+    Enum.map(roles, fn {name, %{repr: repr, status: status}} ->
+      %{name: name, available?: status === :available, repr: repr}
+    end)
+  end
+
+  @spec taken_role_count(%{role => role_status}) :: integer
+  defp taken_role_count(roles) do
+    Enum.count(roles, &match?({_, %{status: :taken}}, &1))
   end
 end

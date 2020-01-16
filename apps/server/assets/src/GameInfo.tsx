@@ -11,7 +11,8 @@ function playerCount({ minPlayers, maxPlayers }: Game) {
 
 function description(game: Game) {
   const players = playerCount(game);
-  const desc = game.description ? game.description : "No description available.";
+  let desc = game.description || "No description available.";
+  desc = desc.endsWith(".") ? desc : desc + ".";
   return `${desc} For ${players}.`;
 }
 

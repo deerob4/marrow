@@ -35,11 +35,14 @@ defmodule Language.Formatter do
   def format_identifier({x, y}) when is_integer(x) and is_integer(y),
     do: "(#{x} #{y})"
 
+  def format_identifier({:variable, {player, var_name}}),
+    do: "#{player}->#{var_name}"
+
   def format_identifier(identifier) when is_bitstring(identifier),
     do: String.replace(identifier, "_", "-")
 
   def format_identifier(identifier),
-    do: identifier |> to_string() |> format_identifier()
+    do: identifier |> inspect() |> format_identifier()
 
   @doc """
   Returns the name of the given `number` in words if it is less

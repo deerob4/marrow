@@ -10,7 +10,9 @@ export function newGame() {
     api
       .post("/games", {}, headerConfig(token))
       .then(r => dispatch(newGameAction.success(r.data.data)))
-      .catch(e => dispatch(newGameAction.failure("error")));
+      .catch(e => {
+        console.error(e.response.data.errors)
+      });
   };
 }
 

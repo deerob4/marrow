@@ -29,7 +29,8 @@ defmodule Language.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       # {:sibling_app_in_umbrella, in_umbrella: true},
       {:jason, "~> 1.1"},
-      {:decimal, "~> 1.0"}
+      {:decimal, "~> 1.0"},
+      {:libgraph, "~> 0.7"}
     ]
   end
 end

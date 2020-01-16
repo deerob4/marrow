@@ -18,7 +18,7 @@ defmodule Language.Model.Dice do
       die, `[6]` would be used; for two 12 sided dice
       [12, 12]; and so on.
 
-    * `reducer_fun` specifies how all the rolled values
+    * `reduce_by` specifies how all the rolled values
       should be reduced to produce a single value. The
       available values are `:sum`, `:subtract`, and
       `:multiply`. `:sum` is the default value.
@@ -29,13 +29,13 @@ defmodule Language.Model.Dice do
 
   alias __MODULE__
 
-  defstruct sides: [6], reducer_fun: :sum
+  defstruct sides: [6], reduce_by: :sum
 
-  @type reducer_fun :: :sum | :subtract | :multiply
+  @type reduce_by :: :sum | :subtract | :multiply
 
   @type t :: %__MODULE__{
           sides: list(pos_integer),
-          reducer_fun: reducer_fun
+          reduce_by: reduce_by
         }
 
   # The max number of dice allowed in a game.
@@ -43,6 +43,14 @@ defmodule Language.Model.Dice do
 
   # The max number of sides a die can have.
   @max_die_sides 100
+
+  defmodule Roll do
+    @moduledoc """
+    Represents a roll of the dice on a particular turn.
+    """
+
+    defstruct [:turn, :rolled]
+  end
 
   @doc """
   Returns whether or not `dice` is valid.
@@ -52,9 +60,9 @@ defmodule Language.Model.Dice do
   """
   @spec valid?(t) :: boolean
 
-  def valid?(%Dice{sides: sides, reducer_fun: reducer_fun})
+  def valid?(%Dice{sides: sides, reduce_by: reduce_by})
       when is_list(sides) and length(sides) <= @max_dice and
-             reducer_fun in [:sum, :subtract, :multiply] do
+             reduce_by in [:sum, :subtract, :multiply] do
     Enum.all?(sides, &(&1 <= @max_die_sides))
   end
 
@@ -73,21 +81,19 @@ defmodule Language.Model.Dice do
 
   For every value in `sides`, a random number is chosen
   between `1` and that value. This list of values is then
-  applied to `reducer_fun` to produce the final roll.
+  applied to `reduce_by` to produce the final roll.
 
   This function returns a tuple in the format
   `{final_roll, rolls}`, where `rolls`  is a list
   containing the value that each die rolled.
   """
-  @spec roll(t) :: {pos_integer, list(pos_integer)}
-  def roll(%Dice{sides: sides, reducer_fun: reducer_fun}) do
+  @spec roll(t) :: integer
+  def roll(%Dice{sides: sides, reduce_by: reduce_by}) do
     rolls = Enum.map(sides, &Enum.random(1..&1))
-    final_roll = Enum.reduce(rolls, arith_fun(reducer_fun))
-
-    {final_roll, rolls}
+    Enum.reduce(rolls, arith_fun(reduce_by))
   end
 
-  @spec arith_fun(reducer_fun) :: (pos_integer, pos_integer -> String.t())
+  @spec arith_fun(reduce_by) :: (pos_integer, pos_integer -> String.t())
   defp arith_fun(:sum), do: &+/2
   defp arith_fun(:multiply), do: &*/2
   defp arith_fun(:subtract), do: &-/2

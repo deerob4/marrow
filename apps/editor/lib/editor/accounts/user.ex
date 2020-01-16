@@ -33,7 +33,7 @@ defmodule Editor.Accounts.User do
     |> validate_required([:name, :email, :password])
     |> validate_confirmation(:password)
     |> validate_length(:password, min: 8)
-    |> unsafe_validate_unique([:email], Editor.Repo)
+    # |> unsafe_validate_unique([:email], Editor.Repo)
     |> unique_constraint(:email)
     |> put_password_hash()
     |> cast_assoc(:games)

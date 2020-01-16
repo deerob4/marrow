@@ -16,10 +16,11 @@ module.exports = (env, options) => ({
     ]
   },
   entry: {
-    "./src/index.ts": ["./src/index.ts"].concat(glob.sync("./vendor/**/*.js"))
+    "./src/index.ts": ["./src/index.ts"].concat(glob.sync("./vendor/**/*.js")),
+    debug_app: "./src/debug_app.js"
   },
   output: {
-    filename: "app.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "../priv/static/js")
   },
   module: {

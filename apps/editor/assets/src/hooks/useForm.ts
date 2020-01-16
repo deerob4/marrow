@@ -1,39 +1,40 @@
-import * as React from "react";
-import validate from "../utils/validators";
+import { useState } from "react";
+import * as validate from "validate.js";
 
-function useForm<T extends object>(constraints: object, empty: T) {
-  type Data = T
-  type Errors = { [key: string]: string[] };
+function useForm<T extends object>(
+  constraints: { [key in keyof T]?: object },
+  defaultValues: T
+) {
+  type Errors = { [key in keyof T]: string[] };
 
-  const [data, setData]: [Data, (data: Data) => void] = React.useState(empty);
-  const [errors, setErrors]: [
-    Errors,
-    (errors: Errors) => void
-  ] = React.useState({});
+  const [data, setData]: [T, (data: T) => void] = useState(defaultValues);
+
+  const emptyErrors = Object.keys(defaultValues).reduce(
+    (errors, field) => ({ ...errors, [field]: [] }),
+    {}
+  ) as Errors;
+
+  const [errors, setErrors]: [Errors, (errors: Errors) => void] = useState(
+    emptyErrors
+  );
 
   function handleInput(e: React.FormEvent<HTMLInputElement>) {
     const target = e.currentTarget;
     const value = target.type === "checkbox" ? target.checked : target.value;
-
-    // @ts-ignore
     setData({ ...data, [target.name]: value });
   }
 
   function handleSubmit(
     e: React.FormEvent<HTMLFormElement>,
-    onSuccess: (data: Data) => void
+    onSuccess: (data: T) => void
   ) {
-    setErrors({});
+    setErrors(emptyErrors);
     e.preventDefault();
 
     validate
       .async(data, constraints)
-      .then(() => {
-        onSuccess(data);
-      })
-      .catch((e: any) => {
-        setErrors(e);
-      });
+      .then(() => onSuccess(data))
+      .catch((e: Errors) => setErrors(e));
   }
 
   return { data, errors, handleInput, handleSubmit };

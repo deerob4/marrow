@@ -20,8 +20,13 @@ defmodule Editor.Games do
     (players
       (min-players 2)
       (max-players 3)
-      (roles a b c)
+      (roles
+        (a (colour red))
+        (b (colour blue))
+        (c (colour green)))
       (start-tile (0 0)))
+
+    (dice (sides 6) (reduce-by sum))
 
     (board (5 5)
       (path (0 0) (4 0))

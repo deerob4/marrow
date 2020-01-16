@@ -77,6 +77,8 @@ defmodule Language.Model.Board do
 
   @max_board_area 25 * 25
 
+  @area_sqrt @max_board_area |> :math.sqrt() |> trunc()
+
   defmodule Dimensions do
     @derive {Jason.Encoder, only: [:width, :height]}
 
@@ -149,97 +151,100 @@ defmodule Language.Model.Board do
       ...> Marrow.Board.new({5, 5}, paths)
 
   """
-  @spec new(dimensions, {[tile], [path_line]}) :: {:ok, t} | {:error, String.t()}
-  def new(dimensions, paths, opts \\ [])
+  @spec new(dimensions, [path_line], [tile]) :: {:ok, t} | {:error, String.t()}
+  def new(dimensions, path_lines, start_tiles)
 
-  def new({w, h}, _paths, _opts) when w * h > @max_board_area do
-    area_root = @max_board_area |> :math.sqrt() |> trunc
+  def new({w, h}, _paths, _start_tiles) when w * h > @max_board_area,
+    do:
+      {:error,
+       "board must not have an area larger than #{@max_board_area} tiles (#{@area_sqrt}x#{
+         @area_sqrt
+       })"}
 
-    {:error,
-     "board must not have an area larger than #{@max_board_area} tiles (#{area_root}x#{area_root})"}
-  end
-
-  def new({w, h}, _paths, _opts) when w < 1 or h < 1,
+  def new({w, h}, _paths, _start_tiles) when w < 1 or h < 1,
     do: {:error, "board size must be at least 1x1"}
 
-  def new({_, _}, {_, []}, _opts),
+  def new({_, _}, [], _),
     do: {:error, "at least one board path must be specified"}
 
-  def new({_, _}, {[], _}, _opts),
+  def new({_, _}, _, []),
     do: {:error, "at least one board starting point must be specified"}
 
-  def new({w, h} = _dimensions, {_start_points, paths}, _opts) do
-    _whole_board = paths |> Enum.map(&generate_path/1) |> List.flatten() |> Enum.uniq()
+  def new({w, h} = dimensions, path_lines, start_tiles) do
+    with :ok <- ensure_positive_paths(path_lines),
+         :ok <- catch_undeclared_start_points(path_lines, start_tiles),
+         :ok <- validate_boundaries(dimensions, path_lines),
+         :ok <- catch_diagonal_lines(path_lines),
+         :ok <- catch_ambiguous_paths(path_lines),
+         :ok <- ensure_continuous_paths(path_lines, start_tiles) do
+      tiles = generate_tiles(path_lines)
+      vs = generate_vertices(tiles)
+      es = generate_edges(tiles)
 
-    with :ok <- ensure_positive_paths(paths) do
-      #  :ok <- catch_undeclared_start_points(start_points, whole_board),
-      #  :ok <- validate_boundaries(dimensions, paths),
-      #  :ok <- catch_diagonal_lines(paths),
-      #  :ok <- catch_ambiguous_paths(paths),
-      #  :ok <- ensure_continuous_paths(start_points, paths) do
-      path_lines =
-        Enum.map(paths, fn {{x1, y1}, {x2, y2}} ->
-          from = %Tile{x: x1, y: y1}
-          to = %Tile{x: x2, y: y2}
-          %PathLine{from: from, to: to}
-        end)
+      graph =
+        Graph.new()
+        |> Graph.add_vertices(vs)
+        |> Graph.add_edges(es)
 
-      # For each set of start/end coordinates, generate the
-      # coordinates between them.
-      # paths = paths |> Enum.map(&generate_path/1) |> List.flatten()
-      # The path list above may contain duplicates and
-      # nested lists, so get rid of those to produce a list
-      # of vertices for the graph.
-      # vs = Enum.uniq(paths)
-      # The edges are a bit more complex.
-      # cyclic? = Keyword.get(opts, :cyclic?, false)
-      # es =
-      #   paths
-      #   |> Enum.chunk_every(2, 1, if(cyclic?, do: paths, else: []))
-      #   |> Enum.map(&List.to_tuple/1)
-      #   |> Enum.reject(fn
-      #     {{x, y}, {x, y}} -> true
-      #     # {{_, _}} -> true and not cyclic? # true and not cyclic?
-      #     _ -> false
-      #   end)
+      board = %Board{
+        dimensions: %Dimensions{width: w, height: h},
+        graph: graph,
+        path_lines: generate_path_structs(path_lines)
+      }
 
-      # Finally put everything together into a graph.
-      # graph =
-      #   Graph.new()
-      #   |> Graph.add_vertices(vs)
-      #   |> Graph.add_edges(es)
-
-      {:ok,
-       %Board{dimensions: %Dimensions{width: w, height: h}, graph: nil, path_lines: path_lines}}
+      {:ok, board}
     end
   end
 
-  # defp catch_undeclared_start_points(start_points, paths) do
-  #   # paths = Enum.map(paths, fn {from, _to} -> from end)
-  #   # IO.inspect paths
-  #   undeclared_start = Enum.find(start_points, &(&1 not in paths))
+  # For each set of start/end coordinates, generate the coordinates between them.
+  defp generate_tiles(path_lines) do
+    path_lines
+    |> Enum.reverse()
+    |> Enum.map(&generate_path/1)
+    |> List.flatten()
+  end
 
-  #   if undeclared_start do
-  #     {:error,
-  #      "start tiles must be declared in path lines, but #{format_tile(undeclared_start)} is not"}
-  #   else
-  #     :ok
-  #   end
-  # end
+  # Horizontal paths.
+  defp generate_path({{x1, y}, {x2, y}}), do: for(x <- x1..x2, do: {x, y})
 
-  # defp ensure_continuous_paths(start_points, paths) do
-  #   froms = Enum.map(paths, fn {from, _to} -> from end)
-  #   tos = Enum.map(paths, fn {_from, to} -> to end)
+  # Vertical paths.
+  defp generate_path({{x, y1}, {x, y2}}), do: for(y <- y1..y2, do: {x, y})
 
-  #   broken_path = Enum.find(froms, &(&1 not in tos and &1 not in start_points))
+  # The vs of the grpah is just a list of the unique tiles.
+  defp generate_vertices(tiles), do: Enum.uniq(tiles)
 
-  #   if broken_path do
-  #     {:error,
-  #      "paths must be continuous, but #{format_tile(broken_path)} is unreachable from the declared tiles"}
-  #   else
-  #     :ok
-  #   end
-  # end
+  defp generate_edges(tiles) do
+    tiles
+    |> Enum.chunk_every(2, 1, :discard)
+    |> Enum.map(&List.to_tuple/1)
+    |> Enum.reject(&match?({x, x}, &1))
+  end
+
+  defp catch_undeclared_start_points(path_lines, start_points) do
+    paths = Enum.map(path_lines, fn {from, _to} -> from end)
+    undeclared_start = Enum.find(start_points, &(&1 not in paths))
+
+    if undeclared_start do
+      {:error,
+       "start tiles must be declared in path lines, but #{format_tile(undeclared_start)} is not"}
+    else
+      :ok
+    end
+  end
+
+  defp ensure_continuous_paths(paths, start_points) do
+    froms = Enum.map(paths, fn {from, _to} -> from end)
+    tos = Enum.map(paths, fn {_from, to} -> to end)
+
+    broken_path = Enum.find(froms, &(&1 not in tos and &1 not in start_points))
+
+    if broken_path do
+      {:error,
+       "paths must be continuous, but #{format_tile(broken_path)} is unreachable from the declared tiles"}
+    else
+      :ok
+    end
+  end
 
   # Make sure none of the paths contain any negative values.
   defp ensure_positive_paths(paths) do
@@ -255,56 +260,63 @@ defmodule Language.Model.Board do
   end
 
   # Ensure that only horizontal and vertical paths are allowed.
-  # defp catch_diagonal_lines(paths) do
-  #   # If either an x or y coord isn't the same, then it
-  #   # must be a diagonal.
-  #   diagonal =
-  #     Enum.find(paths, fn
-  #       {{x, _y1}, {x, _y2}} -> false
-  #       {{_x1, y}, {_x2, y}} -> false
-  #       {{_x1, _y1}, {_x2, _y2}} -> true
-  #     end)
+  defp catch_diagonal_lines(paths) do
+    if diagonal = Enum.find(paths, &diagonal?/1) do
+      {:error,
+       "paths must be either horizontal or vertical, but #{format_path_line(diagonal)} forms a diagonal line"}
+    else
+      :ok
+    end
+  end
 
-  #   if diagonal do
-  #     {:error,
-  #      "paths must be either horizontal or vertical, but #{format_path_line(diagonal)} forms a diagonal line"}
-  #   else
-  #     :ok
-  #   end
-  # end
+  # If either an x or y coord isn't the same, then it must be a diagonal.
+  defp diagonal?({{x, _y1}, {x, _y2}}), do: false
+  defp diagonal?({{_x1, y}, {_x2, y}}), do: false
+  defp diagonal?({{_x1, _y1}, {_x2, _y2}}), do: true
 
   # # Ensure that no path line exceeds the specified grid boundaries.
-  # defp validate_boundaries({w, h}, paths) do
-  #   invalid_boundary =
-  #     Enum.find(paths, fn {{x1, y1}, {x2, y2}} ->
-  #       x1 > w or x2 > w or y1 > h or y2 > h
-  #     end)
+  defp validate_boundaries({w, h}, paths) do
+    invalid_boundary =
+      Enum.find(paths, fn {{x1, y1}, {x2, y2}} ->
+        x1 > w or x2 > w or y1 > h or y2 > h
+      end)
 
-  #   if invalid_boundary do
-  #     {:error, "path line #{format_path_line(invalid_boundary)} exceeds the grid boundaries"}
-  #   else
-  #     :ok
-  #   end
-  # end
+    if invalid_boundary do
+      {:error, "path line #{format_path_line(invalid_boundary)} exceeds the grid boundaries"}
+    else
+      :ok
+    end
+  end
 
   # # Ensure that each tile only connects to one other tile, to prevent
   # # ambiguities around where players can move.
-  # defp catch_ambiguous_paths(paths) do
-  #   froms = Enum.map(paths, fn {from, _to} -> from end)
-  #   ambiguous_path = Enum.find(froms, fn x -> Enum.count(froms, &(&1 === x)) > 1 end)
+  defp catch_ambiguous_paths(paths) do
+    froms = Enum.map(paths, fn {from, _to} -> from end)
+    ambiguous_path = Enum.find(froms, fn x -> Enum.count(froms, &(&1 === x)) > 1 end)
 
-  #   if ambiguous_path do
-  #     {:error,
-  #      "paths must not be ambiguous, but #{format_tile(ambiguous_path)} is connected to multiple tiles"}
-  #   else
-  #     :ok
-  #   end
-  # end
+    if ambiguous_path do
+      {:error,
+       "paths must not be ambiguous, but #{format_tile(ambiguous_path)} is connected to multiple tiles"}
+    else
+      :ok
+    end
+  end
 
-  # Horizontal paths.
-  defp generate_path({{x1, y}, {x2, y}}), do: for(x <- x1..x2, do: {x, y})
+  defp generate_path_structs(path_lines) do
+    Enum.map(path_lines, fn {{x1, y1}, {x2, y2}} ->
+      from = %Tile{x: x1, y: y1}
+      to = %Tile{x: x2, y: y2}
+      %PathLine{from: from, to: to}
+    end)
+  end
+
+  def please_generate_path(%Board.PathLine{from: %{x: x1, y: y}, to: %{x: x2, y: y}}),
+    do: for(x <- x1..x2, do: %Board.Tile{x: x, y: y})
+
+  def please_generate_path(%Board.PathLine{from: %{x: x, y: y1}, to: %{x: x, y: y2}}),
+    do: for(y <- y1..y2, do: %Board.Tile{x: x, y: y})
+
   # Vertical paths.
-  defp generate_path({{x, y1}, {x, y2}}), do: for(y <- y1..y2, do: {x, y})
 
   @doc """
   Adds a new series of paths to the board.
@@ -326,6 +338,33 @@ defmodule Language.Model.Board do
   end
 
   def format_path_line({{x1, y1}, {x2, y2}}), do: "`(path (#{x1} #{y1}) (#{x2} #{y2}))`"
+
   def format_tile({x, y}), do: "`(#{x} #{y})`"
   def format_tile(%Tile{x: x, y: y}), do: "`(#{x} #{y})`"
+
+  @doc """
+  For any given `tile`, returns the tile one space ahead.
+  Alternatively returns `nil` if `tile` is the end of the
+  board and there is no way forward.
+  """
+  @spec next_tile(t, tile) :: tile | nil
+  def next_tile(%Board{graph: graph}, tile) do
+    case Graph.out_neighbors(graph, tile) do
+      [next_tile] -> next_tile
+      [] -> nil
+    end
+  end
+
+  def path_to_tile(%Board{graph: graph}, from, to) do
+    tiles = Graph.dijkstra(graph, from, to)
+    Enum.map(tiles, fn {x, y} -> %Tile{x: x, y: y} end)
+  end
+
+  @doc """
+  Returns `true` if `tile` exists on the board, otherwise `false`.
+  """
+  @spec valid_tile?(t, tile) :: boolean
+  def valid_tile?(%Board{graph: graph} = _board, tile) do
+    Graph.has_vertex?(graph, tile)
+  end
 end

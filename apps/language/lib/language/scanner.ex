@@ -66,6 +66,16 @@ defmodule Language.Scanner do
     "turn-time-limit",
     "choose-random",
     "rand-int",
+    # dice
+    "sum",
+    "multiply",
+    "subtract",
+    "sides",
+    "reduce-by",
+    # Players
+    "colour",
+    "image",
+    "start-on",
     # Variables
     "?current-player",
     "?current-tile",
@@ -73,6 +83,7 @@ defmodule Language.Scanner do
     "?player-count",
     "?board-height",
     "?board-width",
+    "var",
     # Callbacks
     "handle-win",
     "handle-lose",

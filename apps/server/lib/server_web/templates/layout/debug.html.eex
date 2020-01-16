@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.11.1/tachyons.min.css">
+    <title>Debug Games</title>
+  </head>
+  <body>
+    <%= render @view_module, @view_template, assigns %>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/debug_app.js") %>"></script>
+  </body>
+</html>

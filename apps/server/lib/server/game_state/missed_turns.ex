@@ -3,6 +3,9 @@ defmodule Server.GameState.MissedTurns do
   Specifies a
   """
 
+  @typedoc """
+  Does something cool.
+  """
   @type t :: %__MODULE__{duration: integer, set_on: integer}
 
   defstruct [:duration, :set_on]

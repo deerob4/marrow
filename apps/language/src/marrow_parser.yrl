@@ -84,6 +84,7 @@ identify_variables(Identifier, Args) ->
   case {Identifier, Args} of
     {{identifier, _Line, Name}, [Role]} when 
        erlang:is_bitstring(Role);
+       Role =/= 'var',
        Role == '?current_player';
        Role == '?current_tile';
        Role == '?current_turn';

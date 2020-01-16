@@ -39,7 +39,7 @@ defmodule EditorWeb.EditorChannel do
     DynamicSupervisor.start_child(EditorSupervisor, {EditorServer, game_id})
 
     {game, model, source} = Games.load_editor_data(game_id)
-    IO.inspect game
+
     # Some data is available whether the game has been compiled or not.
     available_data = %{
       editingGame: %{

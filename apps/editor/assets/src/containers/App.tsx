@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Editor from "../components/Editor";
 import GameIndex from "../components/GameIndex";
@@ -86,7 +85,8 @@ const mapDispatchToProps = {
   setEditingGameId
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App);

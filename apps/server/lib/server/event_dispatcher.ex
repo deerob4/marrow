@@ -5,9 +5,8 @@ defmodule Server.EventDispatcher do
   by the user.
   """
 
-  import Language.Interpreter, only: [reduce_expr: 1]
+  import Language.Interpreter, only: [reduce_expr: 2, reduce_args: 2]
 
-  alias Language.Environment
   alias Server.GameState
 
   @type event :: any
@@ -24,115 +23,89 @@ defmodule Server.EventDispatcher do
   Dispatches `event` on the game `state`, returning the updated
   state if successful.
   """
-  @spec dispatch(GameState.t(), event) :: GameState.t()
-  def dispatch(state, event)
+  @spec dispatch(event, GameState.t()) :: GameState.state_update
+  def dispatch(event, state)
 
-  def dispatch(%{role_positions: positions} = state, {:move_to, [role, coord]}) do
-    with :ok <- GameState.validate_role(state, role),
-         :ok <- GameState.validate_coord(state, coord) do
-      positions = Map.put(positions, role, coord)
-      {:ok, %{state | role_positions: positions}}
-    else
-      :invalid_role ->
-        build_error("move-to", "role `#{role}` does not exist")
-
-      :invalid_coord ->
-        build_error("move-to", "tile `#{coord}` is invalid")
+  # Moving to a new tile: [move_to: [{:var, [:"?current_player"]}, {2, 3}]]
+  def dispatch({:move_to, [_, _] = args}, state) do
+    with {:ok, [role, tile]} <- reduce_args(args, state) do
+      GameState.move_to_tile(state, role, tile)
     end
   end
 
-  # Setting a player variable: {:set!, [{"score", ["a"]}, {:+, [10, 20]}]}
-  def dispatch(%{variables: vars} = state, {:set!, [{variable, [player]}, new_value]}) do
-    with {:ok, new_value} <- reduce_expr(new_value),
-         {:player, var_map} <- get_variable_with_type(variable, vars),
-         var_map = put_in(var_map, [player], new_value),
-         {:ok, variables} <- Environment.replace(vars, variable, var_map) do
-      {:ok, %{state | variables: variables}}
-    else
-      error -> set_error(error, variable)
+  # Moving to a new tile and specifying the path: move_to: ["keir", {3, 9}, {3, 8}, {3, 7}, {3, 6}]
+  def dispatch({:move_to, [role | path]}, state) do
+    with {:ok, path} <- reduce_args(path, state),
+         {:ok, role} <- reduce_expr(role, state) do
+      GameState.move_via_path(state, role, path)
     end
   end
 
-  # Setting a global variable: {:set, ["score", {:+, [10, 20]}]}
-  def dispatch(%{variables: vars} = state, {:set!, [variable, new_value]}) do
-    with {:ok, new_value} <- reduce_expr(new_value),
-         {:global, _var} <- get_variable_with_type(variable, vars),
-         {:ok, variables} <- Environment.replace(vars, variable, new_value) do
-      {:ok, %{state | variables: variables}}
-    else
-      error -> set_error(error, variable)
+  # Setting player variable: [{:set!, [{:variable, {"a", "circuits"}}, 10]}]
+  def dispatch({:set!, [{:variable, {role, var_name}}, new_value]}, state) do
+    with {:ok, role} <- reduce_expr(role, state),
+         {:ok, var_name} <- reduce_expr(var_name, state),
+         {:ok, new_value} <- reduce_expr(new_value, state) do
+      GameState.set_variable(state, {:player, var_name, role, new_value})
     end
   end
 
-  def dispatch(state, {:increment!, [variable]}) do
-    dispatch(state, {:set!, [variable, {:+, [variable, 1]}]})
+  def dispatch({:set!, [{:event, var_name, [role]}, new_value]}, state) do
+    with {:ok, var_name} <- reduce_expr(var_name, state),
+         {:ok, role} <- reduce_expr(role, state),
+         {:ok, new_value} <- reduce_expr(new_value, state) do
+      GameState.set_variable(state, {:player, var_name, role, new_value})
+    end
   end
 
-  def dispatch(state, {:decrement!, [variable]}) do
-    dispatch(state, {:set!, [variable, {:-, [variable, 1]}]})
+  # Setting global variable
+  def dispatch({:set!, [var_name, new_value]}, state) do
+    with {:ok, new_value} <- reduce_expr(new_value, state),
+         {:ok, var_name} <- reduce_expr(var_name, state) do
+      GameState.set_variable(state, {:global, var_name, new_value})
+    end
   end
 
-  def dispatch(state, {:set_meta!, [tile, meta, new_value]}) do
-    put_in(state, [:metadata, meta, tile], new_value)
+  def dispatch({:set_meta!, [_, _, _] = args}, state) do
+    with {:ok, [tile, meta, new_value]} <- reduce_args(args, state) do
+      GameState.set_meta(state, meta, tile, new_value)
+    end
   end
 
-  def dispatch(state, {:skip_turn, [role, duration]}) do
-    GameState.miss_turns(state, role, duration)
+  def dispatch({:skip_turn, [_, _] = args}, state) do
+    with {:ok, [role, duration]} <- reduce_args(args, state) do
+      GameState.miss_turns(state, role, duration)
+    end
   end
 
   def dispatch(state, {:broadcast, [message]}) do
-    dispatch(state, {:broadcast_to, [message, GameState.roles(state)]})
+    dispatch({:broadcast_to, [message, GameState.roles(state)]}, state)
   end
 
-  def dispatch(state, {:broadcast_to, [message, roles]}) do
-  end
-
-  # Return the variable from the environment tagged with its type.
-  defp get_variable_with_type(variable_name, vars) do
-    case Environment.get(vars, variable_name) do
-      {:ok, %{} = var} -> {:player, var}
-      {:ok, var} -> {:global, var}
-      :not_found -> :not_found
+  def dispatch({:broadcast_to, [_, _] = args}, state) do
+    with {:ok, [message, roles]} <- reduce_args(args, state) do
+      GameState.register_broadcast(state, message, roles)
     end
   end
 
-  defp build_error(function, error) do
-    {:error, "error in `#{function}`: #{error}"}
-  end
-
-  defp set_error(error, variable) do
-    case error do
-      {:player, _} ->
-        build_error(
-          "set!",
-          "variable `#{variable}` is a player variable but is being used as a global"
-        )
-
-      {:global, _} ->
-        build_error(
-          "set!",
-          "variable `#{variable}` is a global variable but is being used as a player"
-        )
-
-      :not_found ->
-        build_error("set!", "variable `#{variable}` doesn't exist")
-
-      _ ->
-        error
+  def dispatch({:win, [role]}, state) do
+    with {:ok, role} <- reduce_expr(role, state) do
+      GameState.win(state, role)
     end
   end
 
-  @doc """
+  def dispatch({:lose, [role]}, state) do
+    with {:ok, role} <- reduce_expr(role, state) do
+      role
+    end
+  end
 
-  """
-  @spec derive(global_var, GameState.t()) :: Language.variable()
-  def derive(global_var, state)
+  def dispatch({:choose_card, []}, state) do
+    GameState.choose_card(state)
+  end
 
-  def derive(:"?current_player", %{active_role: current_player}),
-    do: current_player
-
-  def derive(:"?current_tile", %{active_role: current_player, role_positions: positions}),
-    do: positions[current_player]
-
-  def derive(:"?current_turn", %{current_turn: current_turn}), do: current_turn
+  def dispatch(unknown_event, _state) do
+    {:error,
+     "Unknown dispatch `#{inspect(unknown_event)}`. This probably means your parentheses are nested incorrectly."}
+  end
 end

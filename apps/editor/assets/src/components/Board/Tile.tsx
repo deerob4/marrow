@@ -37,7 +37,6 @@ const Container = styled.div`
   background-image: ${(props: ITileStyle) =>
     props.image && props.showImages ? `url(${props.image})` : "none"};
   background-size: cover;
-  background-color: ${(props: ITileStyle) => (props.isHovering && !props.image ? "blue" : "none")};
 `;
 
 const Tile: React.SFC<Props> = props => {

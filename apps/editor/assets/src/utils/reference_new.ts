@@ -1,4 +1,4 @@
-import { Types, MarrowType, typeToString, formatFunction } from "./marrow_type";
+import { Types, MarrowType } from "./marrow_type";
 
 const {
   int,
@@ -527,6 +527,14 @@ export const references: Reference[] = [
     details:
       "Set's the tile's metadata attribute to the given string. This will replace any value that may currently be set. The tile must be within the board's boundaries.",
     args: [tile(), atom(), string()],
+    allowedInside: allowedInLogic()
+  },
+  {
+    name: "choose-card",
+    kind: RefType.Command,
+    category: Category.Game,
+    details: "Chooses a random card and makes the player play it. Raises if no cards have been defined.",
+    args: [],
     allowedInside: allowedInLogic()
   },
   {

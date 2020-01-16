@@ -47,7 +47,11 @@ defmodule Editor.Games.Game do
         put_change(cset, field, Map.get(model, field))
       end)
     else
-      _ -> cset
+      {:error, error} ->
+        add_error(cset, :source, "compile error: #{error}")
+
+      _ ->
+        cset
     end
   end
 end

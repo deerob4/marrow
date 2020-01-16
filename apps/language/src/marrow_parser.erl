@@ -10,6 +10,7 @@ identify_variables(Identifier, Args) ->
   case {Identifier, Args} of
     {{identifier, _Line, Name}, [Role]} when 
        erlang:is_bitstring(Role);
+       Role =/= 'var',
        Role == '?current_player';
        Role == '?current_tile';
        Role == '?current_turn';
@@ -25,7 +26,7 @@ identify_variables(Identifier, Args) ->
       {val(Identifier), Args}
   end.
 
--file("/usr/lib/erlang/lib/parsetools-2.1.7/include/yeccpre.hrl", 0).
+-file("/usr/local/Cellar/erlang/21.2.2/lib/erlang/lib/parsetools-2.1.8/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -197,7 +198,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/marrow_parser.erl", 200).
+-file("src/marrow_parser.erl", 201).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -1315,4 +1316,4 @@ yeccpars2_83_(__Stack0) ->
   end | __Stack].
 
 
--file("src/marrow_parser.yrl", 101).
+-file("src/marrow_parser.yrl", 102).

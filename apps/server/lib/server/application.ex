@@ -12,7 +12,8 @@ defmodule Server.Application do
       Server.GamesRegistry,
       ServerWeb.Endpoint,
       Server.GamesSupervisor,
-      Server.Presence
+      Server.Presence,
+      Server.GameMonitor
       # Starts a worker by calling: Server.Worker.start_link(arg)
       # {Server.Worker, arg},
     ]

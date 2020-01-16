@@ -8,10 +8,13 @@ defmodule Editor.Assets do
   play on a certain event.
   """
 
+  import Ecto.Query
+
   alias Ecto.Multi
   alias Editor.Repo
   alias Editor.Games.Game
   alias Editor.Assets.{Audio, Image, Uploader}
+  alias Language.Model
 
   @type asset :: :image | :audio
 
@@ -110,5 +113,47 @@ defmodule Editor.Assets do
   def preload_assets(game, assets \\ []) do
     assets = if assets === [], do: [:images, :audio], else: assets
     Repo.preload(game, assets)
+  end
+
+  @doc """
+  Returns the image called `name` in the given game.
+  """
+  @spec get_image_by_name(String.t(), integer) :: Image.t() | nil
+  def get_image_by_name(name, game_id) do
+    Repo.get_by(Image, name: name, game_id: game_id)
+  end
+
+  @doc """
+  Replaces the image names used in the image metadata with the
+  actual URLs.
+  """
+  @spec replace_image_metadata(Model.t(), integer) :: Model.t()
+  def replace_image_metadata(
+        %Model{metadata: %{"images" => game_images} = metadata} = model,
+        game_id
+      ) do
+    saved_images = get_saved_images(game_id)
+    game_images = replace_metadata(game_images, saved_images)
+    %{model | metadata: %{metadata | "images" => game_images}}
+  end
+
+  def replace_image_metadata(%Model{} = model, _game_id) do
+    model
+  end
+
+  defp get_saved_images(game_id) do
+    from(i in Image, where: i.game_id == ^game_id, select: %{i.name => i.url})
+    |> Repo.all()
+    |> Enum.reduce(&Map.merge/2)
+  end
+
+  defp replace_metadata(game_images, saved_images) do
+    Map.new(game_images, fn {tile, name} ->
+      if url = saved_images[name] do
+        {tile, url}
+      else
+        {tile, name}
+      end
+    end)
   end
 end

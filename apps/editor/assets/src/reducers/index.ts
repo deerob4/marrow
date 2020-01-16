@@ -17,7 +17,6 @@ import traitReducer from "../reducers/traits";
 
 const createAppReducer = (history: History) =>
   combineReducers<AppState>({
-    // @ts-ignore
     router: connectRouter(history),
     images: imageReducer,
     audio: audioReducer,
