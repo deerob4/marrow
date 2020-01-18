@@ -12,12 +12,9 @@ export const history = createBrowserHistory();
 
 const composeEnhancers = composeWithDevTools({});
 
-export default function configureStore(
-  initialState: AppState
-): Store<AppState> {
+export default function configureStore(initialState: AppState): Store<AppState> {
   const store = createStore(
     createRootReducer(history),
-    // @ts-ignore
     initialState,
     composeEnhancers(
       applyMiddleware(
@@ -31,5 +28,3 @@ export default function configureStore(
 
   return store;
 }
-
-// const socketMiddleware = (store: Store) => next => action => {};
