@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import * as ReactMarkdown from "react-markdown";
@@ -26,11 +26,10 @@ const CompileError = styled.div`
   font-size: 18px;
 `;
 
-
 function capitaliseFirstLetter(string: string) {
   const first = string[0];
   const rest = string.slice(1, string.length);
-  
+
   return first.toUpperCase() + rest;
 }
 
@@ -42,9 +41,12 @@ function addFullStop(string: string) {
   }
 }
 
-const formatError = compose(capitaliseFirstLetter, addFullStop);
+const formatError = compose(
+  capitaliseFirstLetter,
+  addFullStop
+);
 
-const CompilerStatus: React.SFC<Props> = props => {
+const CompilerStatus: React.SFC<Props> = (props) => {
   if (props.isOkay) {
     return (
       <StatusContainer>
@@ -85,7 +87,7 @@ const mapStateToProps = (state: AppState) => {
     isOkay: compileStatus.type === "ok",
     isCompiling: compileStatus.type === "compiling",
     isError: compileStatus.type === "error",
-    errorMessage: compileStatus.type === "error" ? compileStatus.error : null
+    errorMessage: compileStatus.type === "error" ? compileStatus.error : null,
   };
 };
 

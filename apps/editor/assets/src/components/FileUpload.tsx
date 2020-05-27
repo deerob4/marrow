@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 interface Props {
   onFilesSelected: (files: FileList) => void;
@@ -54,8 +54,7 @@ class FileUpload extends React.Component<Props, State> {
     fileSelector.setAttribute("type", "file");
     fileSelector.setAttribute("multiple", "multiple");
 
-    if (this.props.accept)
-      fileSelector.setAttribute("accept", this.props.accept);
+    if (this.props.accept) fileSelector.setAttribute("accept", this.props.accept);
 
     return fileSelector;
   }

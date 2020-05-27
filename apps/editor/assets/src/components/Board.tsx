@@ -1,12 +1,7 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 
-import {
-  IDimensions,
-  ICoord,
-  IPathLine,
-  IBoardStructure
-} from "../store/board/types";
+import { IDimensions, ICoord, IPathLine, IBoardStructure } from "../types";
 import Coordinate from "./Board/Coordinate";
 import Tile from "./Board/Tile";
 import EmptyTile from "./Board/EmptyTile";
@@ -53,18 +48,18 @@ type CoordPredicate = ((coord: ICoord) => boolean);
 
 const iSYCoord: CoordPredicate = where({
   x: equals(0),
-  y: notEquals(0)
+  y: notEquals(0),
 });
 
 const isXCoord: CoordPredicate = where({
   x: notEquals(0),
-  y: equals(0)
+  y: equals(0),
 });
 
 const isEmptyTile: CoordPredicate = allPass([
   complement(iSYCoord),
   complement(isXCoord),
-  where({ y: equals(0) })
+  where({ y: equals(0) }),
 ]);
 
 const renderTile = cond([
@@ -72,7 +67,7 @@ const renderTile = cond([
   [iSYCoord, ({ y }) => <Coordinate key={`y-${y}`} value={y - 1} />],
   [isEmptyTile, always(<EmptyTile key="empty-tile" />)],
   // @ts-ignore
-  [R.T, coord => <Tile key={tileKey(coord)} coord={coord} />]
+  [R.T, (coord) => <Tile key={tileKey(coord)} coord={coord} />],
 ]);
 
 const renderTiles = (dimensions: IDimensions) => {
@@ -91,9 +86,9 @@ const renderTiles = (dimensions: IDimensions) => {
 const mapStateToProps = (state: AppState) => ({
   structure: {
     dimensions: state.board.dimensions,
-    paths: state.board.paths
+    paths: state.board.paths,
   },
-  tileSize: state.board.options.tileSize
+  tileSize: state.board.options.tileSize,
 });
 
 // @ts-ignore

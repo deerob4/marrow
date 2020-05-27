@@ -1,14 +1,14 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { RouteComponentProps } from "react-router";
-import { merge, props } from "ramda";
+import { merge } from "ramda";
 
 import {
   editGameSource,
   connectToEditor,
   leaveEditor,
-  recompile
+  recompile,
 } from "../actions/EditorActions";
 
 import { AppState, EditingGame, GameMetadata } from "../types";
@@ -27,7 +27,7 @@ enum Panel {
   GameProperties,
   AssetManager,
   BoardViewer,
-  Cards
+  Cards,
 }
 
 interface Props extends RouteComponentProps {
@@ -65,7 +65,7 @@ class Editor extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      currentPanel: Panel.LanguageReference
+      currentPanel: Panel.LanguageReference,
     };
   }
 
@@ -125,52 +125,52 @@ class Editor extends React.Component<Props, State> {
                 name: "recompile",
                 icon: "sync",
                 onClick: this.props.recompile,
-                isActive: false
+                isActive: false,
               },
               {
                 name: "languageReference",
                 icon: "question-circle",
                 onClick: () => this.setPanel(Panel.LanguageReference),
-                isActive: panel === Panel.LanguageReference
+                isActive: panel === Panel.LanguageReference,
               },
               {
                 name: "boardViewer",
                 icon: "vector-square",
                 onClick: () => this.setPanel(Panel.BoardViewer),
-                isActive: panel === Panel.BoardViewer
+                isActive: panel === Panel.BoardViewer,
               },
               {
                 name: "cards",
                 icon: "route ",
                 onClick: () => this.setPanel(Panel.Cards),
-                isActive: panel === Panel.Cards
+                isActive: panel === Panel.Cards,
               },
               {
                 name: "assets",
                 icon: "images",
                 onClick: () => this.setPanel(Panel.AssetManager),
-                isActive: panel === Panel.AssetManager
+                isActive: panel === Panel.AssetManager,
               },
               {
                 name: "settings",
                 icon: "cog",
                 onClick: () => this.setPanel(Panel.GameProperties),
-                isActive: panel === Panel.GameProperties
-              }
+                isActive: panel === Panel.GameProperties,
+              },
             ]}
             bottomActions={[
               {
                 name: "games",
                 icon: "home",
                 onClick: this.leaveEditor,
-                isActive: false
-              }
+                isActive: false,
+              },
             ]}
           />
           <InnerGrid>
             <CodeEditor
               value={this.props.game.source}
-              onChange={newSource => {
+              onChange={(newSource) => {
                 this.props.editGameSource(this.props.game.id, newSource);
               }}
             />
@@ -188,7 +188,7 @@ const mapDispatchToProps = {
   connectToEditor: connectToEditor.request,
   recompile: recompile.request,
   leaveEditor,
-  push
+  push,
 };
 
 const mapStateToProps = (state: AppState) => {
@@ -196,7 +196,7 @@ const mapStateToProps = (state: AppState) => {
   const gameMetadata = state.gameMetadata.byId[editingGame.metadataId];
 
   return {
-    game: merge(editingGame, gameMetadata)
+    game: merge(editingGame, gameMetadata),
   };
 };
 

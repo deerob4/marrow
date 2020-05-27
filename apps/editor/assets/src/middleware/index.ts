@@ -1,6 +1,5 @@
 import TokenStore from "../thunks/TokenStore";
 import { Middleware, MiddlewareAPI, Dispatch } from "redux";
-import { debounce } from "lodash";
 import ActionType from "../constants";
 import { Action, AppState, EditorConnect, Image, Audio } from "../types";
 import { Socket, Channel } from "phoenix";

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import {
@@ -6,7 +6,7 @@ import {
   toggleShowPathLines,
   toggleShowArrows,
   toggleShowUnusedTiles,
-  toggleShowImages
+  toggleShowImages,
 } from "../../actions/BoardActions";
 import { AppState } from "../../types";
 
@@ -27,7 +27,7 @@ interface Props {
   toggleShowImages: typeof toggleShowImages;
 }
 
-const BoardControls: React.SFC<Props> = props => {
+const BoardControls: React.SFC<Props> = (props) => {
   return (
     <div className="board-controls">
       <div className="form-group">
@@ -39,7 +39,7 @@ const BoardControls: React.SFC<Props> = props => {
           max={100}
           className="form-control-range"
           value={props.tileSize}
-          onChange={e => props.resizeBoard(parseInt(e.target.value, 10))}
+          onChange={(e) => props.resizeBoard(parseInt(e.target.value, 10))}
         />
       </div>
 
@@ -100,7 +100,7 @@ const BoardControls: React.SFC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  ...state.board.options
+  ...state.board.options,
 });
 
 const mapDispatchToProps = {
@@ -108,7 +108,7 @@ const mapDispatchToProps = {
   toggleShowArrows,
   toggleShowPathLines,
   toggleShowUnusedTiles,
-  toggleShowImages
+  toggleShowImages,
 };
 
 export default connect(

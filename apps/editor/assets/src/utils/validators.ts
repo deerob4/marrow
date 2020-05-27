@@ -3,7 +3,7 @@ import * as _validate from 'validate.js';
 
 // Typings aren't all there for validate.js, so create
 // a custom version that satisfies the compiler.
-var validate: any = _validate;
+var validate = _validate;
 
 /**
  * Ensures that the value passed is `true`, otherwise
@@ -13,16 +13,6 @@ var validate: any = _validate;
 function isTrue(value: boolean) {
   if (value) return;
   return 'must be accepted';
-}
-
-/**
- * Calls the server to check that the school's
- * postcode hasn't already been taken.
- * @param {string} postcode - Postcode to validate.
- */
-function uniquePostcode(postcode: string) {
-  var address = `/api/accounts/validate?postcode=${postcode}`;
-  return uniqueValidation(postcode, address);
 }
 
 /**
@@ -44,6 +34,7 @@ function uniqueEmail(email: string) {
  * @param {string} address - The API address to call to validate uniqueness.
  */
 function uniqueValidation(field: string, address: string) {
+  // @ts-ignore
   return new validate.Promise((resolve: any, reject: any) => {
     if (!field) resolve();
 
@@ -65,7 +56,6 @@ function uniqueValidation(field: string, address: string) {
 
 // Register all the custom validators with validate and export it,
 // so we can use it in all the other modules.
-validate.validators.uniquePostcode = uniquePostcode;
 validate.validators.uniqueEmail = uniqueEmail;
 validate.validators.isTrue = isTrue;
 

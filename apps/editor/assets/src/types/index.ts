@@ -252,6 +252,104 @@ export type RenameAsset<T extends AssetType> = {
   type: T;
 };
 
+
+export enum BoardActionType {
+  RESIZE_BOARD = "@@board/RESIZE_BOARD",
+  UPDATE_BOARD_STRUCTURE = "@@board/UPDATE_BOARD_STRUCTURE",
+  TOGGLE_SHOW_BOARD_PATH_LINES = "@@board/TOGGLE_SHOW_BOARD_PATH_LINES",
+  TOGGLE_SHOW_BOARD_ARROWS = "@@board/TOGGLE_SHOW_BOARD_ARROWS",
+  TOGGLE_SHOW_UNUSED_TILES = "@@board/TOGGLE_SHOW_UNUSED_TILES",
+  TOGGLE_SHOW_IMAGES = "@@board/TOGGLE_SHOW_IMAGES",
+}
+
+export enum Axis {
+  XAxis,
+  YAxis
+}
+
+/**
+ * The direction in which a path line may point.
+ */
+export enum PathDirection {
+  Up = "up",
+  Down = "down",
+  Left = "left",
+  Right = "right"
+}
+
+/**
+ * A line in a certain direction that is `distance` number of
+ * tiles across the board.
+ */
+export interface IPathLine {
+  direction: PathDirection;
+  distance: number;
+}
+
+/**
+ * The width and height of the game board.
+ */
+export interface IDimensions {
+  width: number;
+  height: number;
+}
+
+/**
+ * A single point on a 2D Cartesian grid.
+ */
+export interface ICoord {
+  x: number;
+  y: number;
+}
+
+/**
+ * A vertical or horizontal path line between two coordinates.
+ */
+export interface IPath {
+  from: ICoord;
+  to: ICoord;
+}
+
+export interface IBoardStructure {
+  dimensions: IDimensions;
+  paths: IPath[];
+}
+
+/**
+ * A mapping between Cantor-paired board coordinates and image
+ * names.
+ */
+export interface IBoardImage {
+  [tilePair: number]: string;
+}
+
+/**
+ * The different varieties of traits that can appear on the board.
+ */
+export enum TraitType {
+  Image,
+  Label,
+  Marker,
+  Arrow,
+  Trigger,
+  StartPoint
+}
+
+/**
+ * How the trait is displayed on the board.
+ */
+export enum DisplayMode {
+  /**
+   * Only appears when the mouse is hovered over the tile.
+   */
+  Hover,
+
+  /**
+   * Always shown.
+   */
+  Fixed
+}
+
 /**
  * The current status of the authentication page.
  */

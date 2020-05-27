@@ -1,15 +1,15 @@
-import * as React from "react";
+import React from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import styled from "styled-components";
 
-import { IDimensions, ICoord, IImageTrait, IPath } from "../../store/board/types";
+import { IDimensions, ICoord, IPath } from "../../types";
 
 import cantor from "../../utils/cantor";
 import PathLine from "./PathLine";
 import Label from "./Label";
-import { AppState, Traits, Coord, Image, ById, Asset, ImagesState } from "../../types";
+import { AppState, Traits } from "../../types";
 
 interface Props {
   coord: ICoord;
@@ -33,16 +33,17 @@ interface ITileStyle {
 const Container = styled.div`
   width: ${(props: ITileStyle) => props.tileSize + "px"};
   height: ${(props: ITileStyle) => props.tileSize + "px"};
-  border-color: ${(props: ITileStyle) => (props.isHidden ? "transparent" : "#d5d5d5")};
+  border-color: ${(props: ITileStyle) =>
+    props.isHidden ? "transparent" : "#d5d5d5"};
   background-image: ${(props: ITileStyle) =>
     props.image && props.showImages ? `url(${props.image})` : "none"};
   background-size: cover;
 `;
 
-const Tile: React.SFC<Props> = props => {
+const Tile: React.SFC<Props> = (props) => {
   const className = getTileClass(props.coord, props.boardDimensions);
   const pathLine: IPath | undefined = props.traits.pathLine && {
-    ...props.traits.pathLine
+    ...props.traits.pathLine,
     // from: props.coord
   };
   const [isHovering, setIsHovering] = useState(false);
@@ -63,7 +64,8 @@ const Tile: React.SFC<Props> = props => {
       tileSize={props.tileSize}
       image={props.imageUrl}
       onMouseOver={onHover}
-      onMouseLeave={onLeave}>
+      onMouseLeave={onLeave}
+    >
       {pathLine && props.showPathLines && <PathLine pathLine={pathLine} />}
       {isHovering && props.traits.labels && props.traits.labels.length
         ? props.traits.labels.map((label, i) => <Label key={i} {...label} />)
@@ -81,7 +83,7 @@ function getTileClass({ x, y }: ICoord, { width, height }: IDimensions) {
     "tile--top-edge": y === 0,
     "tile--left-edge": x === 0,
     "tile--bottom-edge": y === height,
-    "tile--right-edge": x === width
+    "tile--right-edge": x === width,
   });
 }
 
@@ -93,7 +95,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
     boardDimensions: state.board.dimensions,
     traits: state.traits.get(coordHash) || {},
     imageUrl: getImageUrl(state, coordHash),
-    hash: coordHash
+    hash: coordHash,
   };
 };
 

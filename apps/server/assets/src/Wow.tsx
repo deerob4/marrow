@@ -1,5 +1,5 @@
 import * as ReactDOM from "react-dom";
-import * as React from "react";
+import React from "react";
 import { useReducer } from "react";
 import { action, ActionType, createAsyncAction } from "typesafe-actions";
 import axios from "axios";
@@ -23,7 +23,7 @@ interface GSProps {
   onChange: (id: number) => void;
 }
 
-const GameSelect: React.SFC<GSProps> = props => {
+const GameSelect: React.SFC<GSProps> = (props) => {
   function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const id = parseInt(e.target.value, 10);
     return props.onChange(id);
@@ -37,7 +37,8 @@ const GameSelect: React.SFC<GSProps> = props => {
         onChange={onChange}
         value={props.selected}
         name="game"
-        id="game">
+        id="game"
+      >
         {props.games.map(({ id, title }) => (
           <option key={id} value={id}>
             {title}
@@ -53,7 +54,7 @@ enum AppMsg {
   SelectGame = "SELECT_GAME",
   FetchRequest = "FETCH_REQUEST",
   FetchSuccess = "FETCH_SUCCESS",
-  FetchFailure = "FETCH_FAILURE"
+  FetchFailure = "FETCH_FAILURE",
 }
 
 const AppActions = {
@@ -67,7 +68,7 @@ const AppActions = {
     AppMsg.FetchRequest,
     AppMsg.FetchSuccess,
     AppMsg.FetchFailure
-  )<void, string, void>()
+  )<void, string, void>(),
 };
 
 type AppAction = ActionType<typeof AppActions>;
@@ -91,7 +92,7 @@ const defaultState: State = {
   games: {},
   isFetchingUrl: false,
   fetchError: null,
-  url: null
+  url: null,
 };
 
 function updateState(state: State, action: AppAction): State {
@@ -103,7 +104,7 @@ function updateState(state: State, action: AppAction): State {
         games: action.payload.reduce(
           (map, game) => ({ ...map, [game.id]: game }),
           {}
-        )
+        ),
       };
 
     case AppMsg.SelectGame:
@@ -119,29 +120,25 @@ function updateState(state: State, action: AppAction): State {
       return {
         ...state,
         fetchError: "Failed to host your game. Please try again later.",
-        isFetchingUrl: false
+        isFetchingUrl: false,
       };
   }
 }
 
 const HostGame: React.SFC<AppProps> = ({ games }) => {
-  const [state, dispatch] = useReducer(
-    updateState,
-    defaultState,
-    games.length ? AppActions.initialiseGameMap(games) : null
-  );
+  const [state, dispatch] = useReducer(updateState, defaultState);
 
   function hostGame(config: Config) {
     dispatch(AppActions.fetchGame.request());
 
     const payload = {
       game_id: state.selectedGame,
-      configuration: mapKeys(config, (v, k) => snakeCase(k))
+      configuration: mapKeys(config, (v, k) => snakeCase(k)),
     };
 
     axios
       .post("/api/hosted-games", payload)
-      .then(r => dispatch(AppActions.fetchGame.success(r.data.data.id)))
+      .then((r) => dispatch(AppActions.fetchGame.success(r.data.data.id)))
       .catch(() => dispatch(AppActions.fetchGame.failure()));
   }
 
@@ -161,7 +158,7 @@ const HostGame: React.SFC<AppProps> = ({ games }) => {
               <GameSelect
                 selected={state.selectedGame}
                 games={games}
-                onChange={id => dispatch(AppActions.selectGame(id))}
+                onChange={(id) => dispatch(AppActions.selectGame(id))}
               />
               <GameInfo {...state.games[state.selectedGame]} />
               {state.fetchError && <p className="text-danger">{state.fetchError}</p>}

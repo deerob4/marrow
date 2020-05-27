@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 
-const Input: React.SFC<any> = props => {
+const Input: React.SFC<any> = (props) => {
   return <input type="text" className="form-control" {...props} />;
 };
 

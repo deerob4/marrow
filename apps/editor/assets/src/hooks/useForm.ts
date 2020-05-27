@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as validate from "validate.js";
+import validate from "../utils/validators";
 
 function useForm<T extends object>(
   constraints: { [key in keyof T]?: object },

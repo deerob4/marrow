@@ -1,7 +1,8 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
+import classnames from "classnames";
 
-import { CompileStatus } from "../store/games/types";
+import { CompileStatus } from "../types";
 import CompilerStatus from "./CompilerStatus";
 
 interface Props {
@@ -17,9 +18,9 @@ const StatusContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const StatusBar: React.SFC<Props> = props => {
+const StatusBar: React.SFC<Props> = (props) => {
   let x = classnames("status-bar", {
-    "status-bar--error": props.compileStatus.type === "error"
+    "status-bar--error": props.compileStatus.type === "error",
   });
 
   return (
@@ -28,3 +29,5 @@ const StatusBar: React.SFC<Props> = props => {
     </StatusContainer>
   );
 };
+
+export default StatusBar;

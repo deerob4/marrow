@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { ILineStyle, lineWidth } from "../Board";
-import { PathDirection, IPath } from "../../store/board/types";
+import { PathDirection, IPath, MarkerPosition } from "../../types";
 
 import Arrow from "./Arrow";
 import Marker from "./Marker";
@@ -26,7 +26,8 @@ const HorizontalLine = styled(Line)`
 
 const UpLine = styled(VerticalLine)`
   transform: translateY(
-    ${(props: ILineStyle) => "-" + (lineWidth(props) - props.tileSize / 2 - 2) + "px"}
+    ${(props: ILineStyle) =>
+      "-" + (lineWidth(props) - props.tileSize / 2 - 2) + "px"}
   );
   margin-left: ${(props: ILineStyle) => props.tileSize / 2 - 2 + "px"};
 `;
@@ -67,7 +68,7 @@ const PathLine: React.SFC<Props> = ({ pathLine, tileSize, showArrows }) => {
 
   return (
     <>
-      <Marker coord={pathLine.from} />
+      <Marker coord={pathLine.from} position={MarkerPosition.Start} />
       {renderLine(arrowProps, tileSize)}
     </>
   );
@@ -149,7 +150,7 @@ function pathDirection({ from, to }: IPath): PathDirection {
 
 const mapStateToProps = (state: AppState) => ({
   tileSize: state.board.options.tileSize,
-  showArrows: state.board.options.showArrows
+  showArrows: state.board.options.showArrows,
 });
 
 export default connect(mapStateToProps)(PathLine);

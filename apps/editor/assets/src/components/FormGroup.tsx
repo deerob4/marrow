@@ -1,5 +1,5 @@
-import * as React from "react";
-import * as classnames from "classnames";
+import React from "react";
+import classnames from "classnames";
 
 interface Props {
   name: string;
@@ -19,16 +19,13 @@ const FormGroup: React.SFC<Props> = (props) => {
     "form-group--error": props.errors ? props.errors.length > 0 : false,
   });
 
-
   return (
     <div className={className}>
       {props.label ? <label htmlFor={props.name}>{props.label}</label> : null}
 
       {props.children}
 
-      {props.errors ? (
-        <div className="text-danger">{props.errors[0]}</div>
-      ) : null}
+      {props.errors ? <div className="text-danger">{props.errors[0]}</div> : null}
     </div>
   );
 };

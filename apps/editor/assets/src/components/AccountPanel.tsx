@@ -1,22 +1,21 @@
-import * as React from "react";
+import React, { Dispatch } from "react";
 import styled from "styled-components";
 import { RouteComponentProps } from "react-router";
 import { connect } from "react-redux";
-import { AppState } from "../store";
-import { useTitle } from "../hooks/useTitle";
+
 import GameSelect from "./GameSelect";
 import Icon from "./Icon";
-import { loadGame } from "../store/games/actions";
-import { deleteGame, newGame } from "../store/games/thunks";
-import { signout } from "../store/auth/thunks";
+import { loadGame } from "../actions/GameActions";
+import { deleteGame, newGame } from "../thunks/games";
+import { logout } from "../thunks/auth";
 
-import { IGame, GameState } from "../store/games/types";
+import { GameMetadata } from "../types";
 
 interface Props extends RouteComponentProps {
-  games: IGame[];
+  games: GameMetadata[];
   newGame: typeof newGame;
   deleteGame: typeof deleteGame;
-  signout: typeof signout;
+  signout: typeof logout;
   show: boolean;
   close: () => void;
 }
@@ -55,8 +54,8 @@ const AccountTitleBar = styled.div`
   margin-bottom: 25px;
 `;
 
-const AccountPanel: React.SFC<Props> = props => {
-  function navigateToGame(gameId: string) {
+const AccountPanel: React.SFC<Props> = (props) => {
+  function navigateToGame(gameId: number) {
     loadGame(gameId);
   }
 
@@ -83,7 +82,7 @@ const AccountPanel: React.SFC<Props> = props => {
 
     return (
       <GameGrid>
-        {props.games.map(game => (
+        {props.games.map((game: GameMetadata) => (
           <GameSelect
             key={game.id}
             game={game}
@@ -116,11 +115,16 @@ const AccountPanel: React.SFC<Props> = props => {
   );
 };
 
-function mapStateToProps(state: AppState) {
-  return { games: Object.values(state.games.games) };
+function mapStateToProps(state: any) {
+  return { games: Object.values(state.games.games) as GameMetadata[] };
 }
 
-const mapDispatchToProps = { newGame, deleteGame, signout };
+function mapDispatchToProps(dispatch: any) {
+  return {
+    newGame: () => dispatch(newGame()),
+    deleteGame: (gameId: number) => dispatch(deleteGame(gameId)),
+  };
+}
 
 export default connect(
   mapStateToProps,

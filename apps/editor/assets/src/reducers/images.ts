@@ -7,8 +7,6 @@ import {
   assocPath,
   append,
   filter,
-  invertObj,
-  compose
 } from "ramda";
 import { ById, Action, Asset, ImagesState } from "../types";
 
@@ -21,8 +19,8 @@ export function deletingImages(state: number[] = [], action: Action) {
       return append(action.payload, state);
 
     case ActionType.DELETE_IMAGE_SUCCESS:
-      return state.filter(id => id !== action.payload);
-    
+      return state.filter((id) => id !== action.payload);
+
     default:
       return state;
   }
@@ -49,7 +47,7 @@ function byId(state: ById<Asset<"image">> = {}, action: Action) {
   }
 }
 
-type ByName = { [name: string]: number }
+type ByName = { [name: string]: number };
 
 function byName(state: ByName = {}, action: Action): ByName {
   switch (action.type) {
@@ -63,19 +61,14 @@ function byName(state: ByName = {}, action: Action): ByName {
       return assoc(action.payload.name, action.payload.id, state);
 
     case ActionType.DELETE_IMAGE_SUCCESS:
-      return compose(
-        // invertObj,
-        dissoc(action.payload),
-        invertObj
-      )(state);
+      return dissoc(action.payload, state);
 
     case ActionType.RENAME_IMAGE_SUCCESS:
       const { id, name } = action.payload;
-      return compose(
-        assoc(name, id),
-        dissoc(id),
-        invertObj
-      )(state);
+      const withoutOldImage = dissoc(name, state);
+      const withNewImage = assoc(name, id, withoutOldImage);
+
+      return withNewImage;
 
     default:
       return state;

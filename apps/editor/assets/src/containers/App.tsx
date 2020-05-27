@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import Editor from "../components/Editor";
@@ -22,7 +22,7 @@ class App extends React.Component<Props, {}> {
     super(props);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.loadSession();
 
     // If they arrive at the app directly via a game url, we need to
@@ -45,7 +45,7 @@ class App extends React.Component<Props, {}> {
       <Switch>
         <Route
           path="/games/:gameId"
-          render={props => {
+          render={(props) => {
             if (props.match) {
               const { gameId } = props.match.params;
               if (this.props.gameExists(gameId)) {
@@ -77,16 +77,15 @@ const mapStateToProps = (state: AppState) => ({
   isCheckingSession: state.auth.isCheckingSession,
   loggedIn: state.auth.loggedIn,
   url: state.router.location.pathname,
-  gameExists: (gameId: number) => state.gameMetadata.byId[gameId] !== undefined
+  gameExists: (gameId: number) => state.gameMetadata.byId[gameId] !== undefined,
 });
 
 const mapDispatchToProps = {
   loadSession,
-  setEditingGameId
+  setEditingGameId,
 };
 
-export default
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

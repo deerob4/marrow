@@ -1,4 +1,4 @@
-// import * as React from "react";
+// import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
@@ -14,7 +14,7 @@ const EmptyTile = styled.div`
 `;
 
 const mapStateToProps = (state: AppState) => ({
-  tileSize: state.board.options.tileSize
+  tileSize: state.board.options.tileSize,
 });
 
 export default connect(mapStateToProps)(EmptyTile);

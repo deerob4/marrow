@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { useReducer } from "react";
 import { action, ActionType } from "typesafe-actions";
 import SpinnerButton from "./SpinnerButton";
@@ -18,7 +18,7 @@ enum ConfigMsg {
   SetIsPublic = "SET_IS_PUBLIC",
   SetAllowSpectators = "SET_ALLOW_SPECTATORS",
   SetPassword = "SET_PASSWORD",
-  SetWaitTime = "SET_WAIT_TIME"
+  SetWaitTime = "SET_WAIT_TIME",
 }
 
 const ConfigActions = {
@@ -33,7 +33,7 @@ const ConfigActions = {
   },
   setWaitTime(waitTime: number) {
     return action(ConfigMsg.SetWaitTime, waitTime);
-  }
+  },
 };
 
 type ConfigAction = ActionType<typeof ConfigActions>;
@@ -45,7 +45,7 @@ function updateConfig(config: FormState, action: ConfigAction): FormState {
         ...config,
         isPublic: action.payload,
         isValid: true,
-        password: null
+        password: null,
       };
 
     case ConfigMsg.SetAllowSpectators:
@@ -55,7 +55,7 @@ function updateConfig(config: FormState, action: ConfigAction): FormState {
       return {
         ...config,
         password: action.payload,
-        isValid: action.payload === null || action.payload.length >= 6
+        isValid: action.payload === null || action.payload.length >= 6,
       };
 
     case ConfigMsg.SetWaitTime:
@@ -63,7 +63,7 @@ function updateConfig(config: FormState, action: ConfigAction): FormState {
       return {
         ...config,
         waitTime,
-        isValid: waitTime >= 5 && waitTime <= 120
+        isValid: waitTime >= 5 && waitTime <= 120,
       };
   }
 }
@@ -73,7 +73,7 @@ const defaultConfig: FormState = {
   allowSpectators: false,
   password: null,
   isValid: true,
-  waitTime: 60
+  waitTime: 60,
 };
 
 interface ConfigProps {
@@ -81,12 +81,12 @@ interface ConfigProps {
   onSubmit: (config: Config) => void;
 }
 
-export const ConfigForm: React.SFC<ConfigProps> = props => {
+export const ConfigForm: React.SFC<ConfigProps> = (props) => {
   const {
     setIsPublic,
     setAllowSpectators,
     setPassword,
-    setWaitTime
+    setWaitTime,
   } = ConfigActions;
   const [config, dispatch] = useReducer(updateConfig, defaultConfig);
 
@@ -115,7 +115,7 @@ export const ConfigForm: React.SFC<ConfigProps> = props => {
             className="form-check-input"
             id="isPublic"
             checked={config.isPublic}
-            onChange={e => dispatch(setIsPublic(e.currentTarget.checked))}
+            onChange={(e) => dispatch(setIsPublic(e.currentTarget.checked))}
           />
           <label htmlFor="isPublic" className="form-check-label">
             List publicly?
@@ -128,9 +128,7 @@ export const ConfigForm: React.SFC<ConfigProps> = props => {
             className="form-check-input"
             id="allowSpectators"
             checked={config.allowSpectators}
-            onChange={e =>
-              dispatch(setAllowSpectators(e.currentTarget.checked))
-            }
+            onChange={(e) => dispatch(setAllowSpectators(e.currentTarget.checked))}
           />
           <label htmlFor="allowSpectators" className="form-check-label">
             Allow spectators?
@@ -159,13 +157,16 @@ export const ConfigForm: React.SFC<ConfigProps> = props => {
               id="password"
               className="form-control"
               value={config.password}
-              onChange={e => dispatch(setPassword(e.currentTarget.value))}
+              onChange={(e) => dispatch(setPassword(e.currentTarget.value))}
             />
           </div>
         )}
 
         <div className="form-group mb-2 mt-3">
-          <label htmlFor="waitTime">Seconds between the minimum player count being reached and the game starting (5 - 120):</label>
+          <label htmlFor="waitTime">
+            Seconds between the minimum player count being reached and the game
+            starting (5 - 120):
+          </label>
 
           <input
             type="number"
@@ -174,10 +175,10 @@ export const ConfigForm: React.SFC<ConfigProps> = props => {
             min="5"
             max="120"
             className="form-control"
-            onChange={e => {
+            onChange={(e) => {
               const waitTime = e.currentTarget.value;
               const waitTimeInt = parseInt(waitTime, 10) || 5;
-              dispatch(setWaitTime(waitTimeInt))
+              dispatch(setWaitTime(waitTimeInt));
             }}
           />
         </div>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Controlled as CodeMirror } from "react-codemirror2";
 // @ts-ignore
@@ -22,9 +22,9 @@ const CodeEditor: React.SFC<Props> = ({ onChange, value }) => {
         lineNumbers: true,
         matchBrackets: true,
         smartIndent: false,
-        mode: "clojure"
+        mode: "clojure",
       }}
-      editorDidMount={e => parinferCodeMirror.init(e)}
+      editorDidMount={(e) => parinferCodeMirror.init(e)}
       onBeforeChange={(e, s, v) => onChange(v)}
     />
   );

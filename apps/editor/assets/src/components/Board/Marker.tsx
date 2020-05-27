@@ -1,7 +1,7 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
-import { MarkerPosition, ICoord } from "../../store/board/types";
-import { compose, eqProps, and, cond } from "ramda";
+import { MarkerPosition, ICoord } from "../../types";
+import { eqProps, and } from "ramda";
 import { connect } from "react-redux";
 import { AppState } from "../../types";
 
@@ -46,7 +46,7 @@ const Marker: React.SFC<Props> = ({ position }) => {
   }
 };
 
-function mapStateToProps(state: AppState, props: Props) {
+function mapStateToProps(state: AppState, props: Props): Props {
   const firstPath = state.board.paths.length ? state.board.paths[0] : null;
 
   const position =
@@ -54,7 +54,7 @@ function mapStateToProps(state: AppState, props: Props) {
       ? MarkerPosition.Start
       : MarkerPosition.EnRoute;
 
-  return { position };
+  return { position, coord: props.coord };
 }
 
 const sameCoord = and(eqProps("x"), eqProps("y"));

@@ -1,6 +1,6 @@
 import { IFixedComplication, DisplayMode, complication } from "./complications";
 
-import { MarkerPosition } from "../Marker";
+import { MarkerPosition } from "../../../types";
 
 interface IMarkerComplication extends IFixedComplication {
   position: MarkerPosition;

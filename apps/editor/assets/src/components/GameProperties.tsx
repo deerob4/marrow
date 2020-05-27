@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
@@ -23,17 +23,14 @@ interface Props {
   toggleIsPublic: () => void;
 }
 
-const GameProperties: React.SFC<Props> = props => {
+const GameProperties: React.SFC<Props> = (props) => {
   return (
     <Card title="Properties" headerType="outside">
       <div className="form-group">
         <label>Header Image</label>
         <FileUpload onFilesSelected={console.log}>
           {(handleFileSelect, isUploading) => (
-            <HeaderImage
-              src={props.headerImageUrl}
-              onClick={handleFileSelect}
-            />
+            <HeaderImage src={props.headerImageUrl} onClick={handleFileSelect} />
           )}
         </FileUpload>
       </div>
@@ -60,12 +57,12 @@ const mapStateToProps = (state: AppState) => {
 
   return {
     isPublic: game.isPublic,
-    headerImageUrl: game.coverUrl
+    headerImageUrl: game.coverUrl,
   };
 };
 
 const mapDispatchToProps = {
-  toggleIsPublic: toggleIsPublic.request
+  toggleIsPublic: toggleIsPublic.request,
 };
 
 export default connect(

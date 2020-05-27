@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import classnames from "classnames";
 import Icon from "./Icon";
 
@@ -21,9 +21,10 @@ const Accordion: React.SFC<Props> = ({ title, isShown, toggle, children }) => {
         style={{
           cursor: "pointer",
           display: "inline-block",
-          fontWeight: "bold"
+          fontWeight: "bold",
         }}
-        onClick={toggleAccordion}>
+        onClick={toggleAccordion}
+      >
         <span className="mr-2">{title}</span>
         {isShown ? <Icon name="caret-up" /> : <Icon name="caret-down" />}
       </h6>

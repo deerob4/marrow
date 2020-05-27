@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import * as ReactMarkdown from "react-markdown";
 
 import {
@@ -11,19 +11,19 @@ import {
   Command,
   GlobalVar,
   Callback,
-  AllowedInside
+  AllowedInside,
 } from "../utils/reference_new";
 
 import {
   typeToString,
   formatFunction,
   formatArgList,
-  MarrowType
+  MarrowType,
 } from "../utils/marrow_type";
 
 import { Badge, BadgeSeparator } from "./Badge";
 
-const Reference: React.SFC<{}> = props => {
+const Reference: React.SFC<{}> = (props) => {
   return (
     <>
       <div className="reference">{props.children}</div>
@@ -38,7 +38,7 @@ const Name: React.SFC<{ name: string }> = ({ name }) => (
 
 const Details: React.SFC<{ details: string }> = ({ details }) => (
   // <p className="reference__details">
-    <ReactMarkdown className="reference__details" source={details} />
+  <ReactMarkdown className="reference__details" source={details} />
   // </p>
 );
 
@@ -72,7 +72,7 @@ const Example: React.SFC<{ example?: string }> = ({ example }) => {
 const Signature: React.SFC<{
   args: MarrowType[];
   returnType: MarrowType;
-}> = props => {
+}> = (props) => {
   return (
     <span className="reference__type">
       {formatFunction(props.args, props.returnType)}
@@ -100,7 +100,7 @@ const BlockReference: React.SFC<{ block: Block & RefInfo }> = ({ block }) => (
 );
 
 const PropertyReference: React.SFC<{ property: Property & RefInfo }> = ({
-  property
+  property,
 }) => (
   <Reference>
     <Name name={property.name} />
@@ -110,9 +110,7 @@ const PropertyReference: React.SFC<{ property: Property & RefInfo }> = ({
   </Reference>
 );
 
-const FunctionReference: React.SFC<{ func: Function & RefInfo }> = ({
-  func
-}) => (
+const FunctionReference: React.SFC<{ func: Function & RefInfo }> = ({ func }) => (
   <Reference>
     <Name name={func.name} />
     <Signature {...func} />
@@ -122,7 +120,7 @@ const FunctionReference: React.SFC<{ func: Function & RefInfo }> = ({
 );
 
 const CallbackReference: React.SFC<{ callback: Callback & RefInfo }> = ({
-  callback
+  callback,
 }) => (
   <Reference>
     <Name name={callback.name} />
@@ -132,7 +130,7 @@ const CallbackReference: React.SFC<{ callback: Callback & RefInfo }> = ({
 );
 
 const CommandReference: React.SFC<{ command: Command & RefInfo }> = ({
-  command
+  command,
 }) => (
   <Reference>
     <Name name={command.name} />
@@ -143,7 +141,7 @@ const CommandReference: React.SFC<{ command: Command & RefInfo }> = ({
 );
 
 const GlobalVarReference: React.SFC<{ globalVar: GlobalVar & RefInfo }> = ({
-  globalVar
+  globalVar,
 }) => (
   <Reference>
     <Name name={globalVar.name} />

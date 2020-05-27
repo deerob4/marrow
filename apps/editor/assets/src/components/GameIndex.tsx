@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import GameSelect from "./GameSelect";
@@ -43,7 +43,7 @@ const TopRow = styled.div`
   margin-bottom: 10px;
 `;
 
-const GameIndex: React.SFC<Props> = props => {
+const GameIndex: React.SFC<Props> = (props) => {
   useTitle("Your Games");
 
   return (
@@ -58,7 +58,7 @@ const GameIndex: React.SFC<Props> = props => {
         </TopRow>
 
         <GameGrid>
-          {props.games.map(game => (
+          {props.games.map((game) => (
             // @ts-ignore
             <GameSelect
               key={game.id}
@@ -73,7 +73,7 @@ const GameIndex: React.SFC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => {
-  let games = state.gameMetadata.allIds.map(id => state.gameMetadata.byId[id]);
+  let games = state.gameMetadata.allIds.map((id) => state.gameMetadata.byId[id]);
   return { games };
 };
 

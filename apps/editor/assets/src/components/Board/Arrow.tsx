@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
-import { PathDirection } from "../../store/board/types";
+import { PathDirection } from "../../types";
 import { ILineStyle, lineWidth } from "../Board";
 import { connect } from "react-redux";
 import { AppState } from "../../types";
@@ -43,7 +43,7 @@ interface Props {
 
 const ARROW_GLYPH = "▲";
 
-const Arrow: React.SFC<Props> = props => {
+const Arrow: React.SFC<Props> = (props) => {
   switch (props.direction) {
     case PathDirection.Up:
       return <UpArrow {...props}>{ARROW_GLYPH}</UpArrow>;
@@ -60,7 +60,7 @@ const Arrow: React.SFC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  tileSize: state.board.options.tileSize
+  tileSize: state.board.options.tileSize,
 });
 
 export default connect(mapStateToProps)(Arrow);

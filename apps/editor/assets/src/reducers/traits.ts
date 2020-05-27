@@ -1,8 +1,8 @@
 import { Map } from "immutable";
 import ActionTypes from "../constants";
-import { Action, Trait, TraitMap, ImageTrait, Label, Traits, Path } from "../types";
+import { Action, Trait, TraitMap, Traits, Path } from "../types";
 import cantor from "../utils/cantor";
-import { pipe, compose } from "ramda";
+import { compose } from "ramda";
 
 type TraitType = any;
 

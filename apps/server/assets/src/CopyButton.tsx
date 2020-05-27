@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { useState } from "react";
 import classnames from "classnames";
 
@@ -19,7 +19,7 @@ export const CopyButton: React.SFC<Props> = ({ text }) => {
       <i
         className={classnames("ml-2", "fas", {
           "fa-check": urlCopied,
-          "fa-copy": !urlCopied
+          "fa-copy": !urlCopied,
         })}
       />
     </button>

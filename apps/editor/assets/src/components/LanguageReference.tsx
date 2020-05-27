@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Card from "./Card";
 import ReferenceList from "./ReferenceList";
 import {
@@ -6,25 +6,42 @@ import {
   RefType,
   Reference,
   filterByKind,
-  filterByString
+  filterByString,
 } from "../utils/reference_new";
 
+interface SearchStatus {
+  searching: boolean;
+  query: string;
+  results: Reference[];
+}
+
 const LanguageReference: React.SFC<{}> = () => {
-  const [searchStatus, setSearchStatus] = React.useState({
+  const [searchStatus, setSearchStatus] = useState<SearchStatus>({
     searching: false,
     query: "",
-    results: []
+    results: [],
   });
 
-  const [openBlocks, setOpenBlocks] = React.useState([]);
-  const [prevOpenBlocks, setPrevOpenBlock] = React.useState(openBlocks);
+  const [openBlocks, setOpenBlocks] = useState<RefType[]>([]);
+  const [prevOpenBlocks, setPrevOpenBlock] = useState(openBlocks);
+
+  function toggleCategory(category: RefType) {
+    if (openBlocks.includes(category)) {
+      const blocks = openBlocks.filter((b) => b !== category);
+      setOpenBlocks(blocks);
+      setPrevOpenBlock(blocks);
+    } else {
+      const blocks = [category, ...openBlocks];
+      setOpenBlocks(blocks);
+      setPrevOpenBlock(blocks);
+    }
+  }
 
   function createRefList(type: RefType, references: Reference[]) {
     return (
       <ReferenceList
         name={type}
         references={filterByKind(type, references)}
-        // @ts-ignore
         isShown={openBlocks.includes(type)}
         toggleShown={() => toggleCategory(type)}
       />
@@ -52,40 +69,20 @@ const LanguageReference: React.SFC<{}> = () => {
       setOpenBlocks(prevOpenBlocks);
     } else {
       const results = filterByString(query.toLowerCase(), references);
-      // @ts-ignore
+
       setSearchStatus({
         searching: true,
         query,
-        results
+        results,
       });
-      // @ts-ignore
-      setOpenBlocks(results.map(r => r.kind));
-    }
-  }
 
-  function toggleCategory(category: RefType) {
-    // @ts-ignore
-    if (openBlocks.includes(category)) {
-      const blocks = openBlocks.filter(b => b !== category);
-      setOpenBlocks(blocks);
-      setPrevOpenBlock(blocks);
-    } else {
-      const blocks = [category, ...openBlocks];
-      // @ts-ignore
-      setOpenBlocks(blocks);
-      // @ts-ignore
-      setPrevOpenBlock(blocks);
+      setOpenBlocks(results.map((r) => r.kind));
     }
   }
 
   function renderSearchResults() {
     if (!searchStatus.results.length) {
-      return (
-        <p>
-          No results found for "{searchStatus.query}
-          ".
-        </p>
-      );
+      return <p>No results found for "{searchStatus.query}".</p>;
     }
 
     return allRefLists(searchStatus.results);
@@ -102,9 +99,7 @@ const LanguageReference: React.SFC<{}> = () => {
           value={searchStatus.query}
           onChange={handleFilter}
         />
-        {searchStatus.searching
-          ? renderSearchResults()
-          : allRefLists(references)}
+        {searchStatus.searching ? renderSearchResults() : allRefLists(references)}
       </>
     </Card>
   );

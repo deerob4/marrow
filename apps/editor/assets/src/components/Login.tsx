@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import Input from "./Input";
@@ -17,13 +17,13 @@ interface Props {
   signedOut: boolean;
 }
 
-const Login: React.FC<Props> = props => {
+const Login: React.FC<Props> = (props) => {
   useTitle("Sign In");
 
   const { data, errors, handleInput, handleSubmit } = useForm<LoginCredentials>(
     {
       email: { presence: { allowEmpty: false } },
-      password: { presence: { allowEmpty: false } }
+      password: { presence: { allowEmpty: false } },
     },
     { email: "", password: "" }
   );
@@ -46,17 +46,16 @@ const Login: React.FC<Props> = props => {
     <>
       <h2>Sign in to your account</h2>
 
-      <p>
-        Enter your credentials below to access and make changes to your games.
-      </p>
+      <p>Enter your credentials below to access and make changes to your games.</p>
 
       {renderLoginError()}
       {renderSignoutMessage()}
 
       <form
-        onSubmit={e => {
-          handleSubmit(e, credentials => props.login(credentials));
-        }}>
+        onSubmit={(e) => {
+          handleSubmit(e, (credentials) => props.login(credentials));
+        }}
+      >
         <FormGroup name="email" label="Email" errors={errors.email}>
           <Input
             id="email"
@@ -86,7 +85,7 @@ const Login: React.FC<Props> = props => {
 const mapStateToProps = (state: AppState) => ({
   loginError: state.auth.error,
   signedOut: state.user === null,
-  loggingIn: state.auth.status === "loggingIn"
+  loggingIn: state.auth.status === "loggingIn",
 });
 
 const mapDispatchToProps = { login };

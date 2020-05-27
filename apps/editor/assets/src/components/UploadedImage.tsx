@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import Icon from "./Icon";
@@ -85,7 +85,7 @@ class UploadedImage extends React.PureComponent<Props, State> {
     this.state = {
       isHovering: false,
       isRenaming: false,
-      newName: this.props.image.name
+      newName: this.props.image.name,
     };
   }
 
@@ -134,7 +134,8 @@ class UploadedImage extends React.PureComponent<Props, State> {
           type="button"
           style={{ width: "35px" }}
           className="btn btn-primary btn-sm mr-1"
-          onClick={this.rename}>
+          onClick={this.rename}
+        >
           <Icon name="check" />
         </button>
 
@@ -142,7 +143,8 @@ class UploadedImage extends React.PureComponent<Props, State> {
           type="button"
           style={{ width: "35px" }}
           className="btn btn-secondary btn-sm"
-          onClick={this.cancelRenaming}>
+          onClick={this.cancelRenaming}
+        >
           <Icon name="times" />
         </button>
       </form>
@@ -177,11 +179,9 @@ class UploadedImage extends React.PureComponent<Props, State> {
       <div>
         <ImageContainer
           onMouseEnter={this.setHovering}
-          onMouseLeave={this.setNotHovering}>
-          <Image
-            isHovering={this.state.isHovering}
-            src={this.props.image.url}
-          />
+          onMouseLeave={this.setNotHovering}
+        >
+          <Image isHovering={this.state.isHovering} src={this.props.image.url} />
           {this.renderIcon()}
           {/* {this.state.isHovering ? (
             <IconRow>
@@ -196,12 +196,12 @@ class UploadedImage extends React.PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  isDeleting: state.deletingImages.includes(props.image.id)
+  isDeleting: state.deletingImages.includes(props.image.id),
 });
 
 const mapDispatchToProps = {
   deleteImage,
-  renameImage
+  renameImage,
 };
 
 export default connect(

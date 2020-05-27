@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import Input from "./Input";
@@ -13,17 +13,17 @@ import { signup } from "../thunks/auth";
 interface Props {
   signup: typeof signup;
   signingUp: boolean;
-  signupError: string;
+  signupError: string | null;
 }
 
-const Signup: React.SFC<Props> = props => {
+const Signup: React.SFC<Props> = (props) => {
   useTitle("Create Account");
 
   const { data, errors, handleInput, handleSubmit } = useForm<SignupFields>(
     {
-      name: { presence: true },
-      email: { presence: true, email: true, uniqueEmail: false },
-      password: { presence: true, length: { minimum: 8 } }
+      name: { presence: { allowEmpty: false } },
+      email: { presence: { allowEmpty: false }, email: true, uniqueEmail: false },
+      password: { presence: true, length: { minimum: 8 } },
     },
     { name: "", email: "", password: "" }
   );
@@ -43,20 +43,15 @@ const Signup: React.SFC<Props> = props => {
       <h2>Get started with a free account</h2>
 
       <p>
-        Creating an account will allow you to create and schedule games with
-        other people.
+        Creating an account will allow you to create and schedule games with other
+        people.
       </p>
 
       {renderSignupError()}
 
-      <form onSubmit={e => handleSubmit(e, details => props.signup(details))}>
+      <form onSubmit={(e) => handleSubmit(e, (details) => props.signup(details))}>
         <FormGroup name="name" label="Name" errors={errors.name}>
-          <Input
-            id="name"
-            name="name"
-            value={data.name}
-            onChange={handleInput}
-          />
+          <Input id="name" name="name" value={data.name} onChange={handleInput} />
         </FormGroup>
 
         <FormGroup name="email" label="Email" errors={errors.email}>
@@ -87,10 +82,14 @@ const Signup: React.SFC<Props> = props => {
 
 const mapStateToProps = (state: AppState) => ({
   signupError: state.auth.error,
-  signingUp: state.auth.status === "signingUp"
+  signingUp: state.auth.status === "signingUp",
 });
 
-const mapDispatchToProps = { signup };
+function mapDispatchToProps(dispatch: any) {
+  return {
+    signup: (account: SignupFields) => dispatch(signup(account)),
+  };
+}
 
 export default connect(
   mapStateToProps,

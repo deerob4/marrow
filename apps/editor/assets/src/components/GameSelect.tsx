@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
-import { connectToEditor, setEditingGameId } from "../actions/EditorActions";
+import { setEditingGameId } from "../actions/EditorActions";
 import { GameMetadata } from "../types";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -56,7 +56,7 @@ const mapDispatchToProps = (dispatch: Dispatch, props: Props) => {
     deleteGame: () => {
       // @ts-ignore
       dispatch(deleteGame(props.game.id));
-    }
+    },
   };
 };
 

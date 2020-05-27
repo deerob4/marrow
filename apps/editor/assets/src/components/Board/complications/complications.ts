@@ -1,6 +1,3 @@
-import { MarkerPosition } from "../Marker";
-import { ICoord } from "../../../store/board/types";
-
 // A complication is anything that appears on the board.
 
 export enum DisplayMode {

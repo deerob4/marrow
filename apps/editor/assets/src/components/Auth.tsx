@@ -1,10 +1,8 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 import { Route, Link, Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
-// import { signout } from "./actions";
-import { connect } from "react-redux";
 
 interface Props {
   // loggedIn: boolean;
@@ -35,7 +33,7 @@ const Logo = styled.h1`
   margin-bottom: 0;
 `;
 
-const Auth: React.SFC<Props> = props => {
+const Auth: React.SFC<Props> = (props) => {
   return (
     <AuthContainer>
       <InnerAuth>
@@ -46,10 +44,7 @@ const Auth: React.SFC<Props> = props => {
             path="/signin"
             render={() => <Link to="signup">Create Account</Link>}
           />
-          <Route
-            path="/signup"
-            render={() => <Link to="signin">Sign In</Link>}
-          />
+          <Route path="/signup" render={() => <Link to="signin">Sign In</Link>} />
         </div>
         <div className="pt-3">
           <Switch>

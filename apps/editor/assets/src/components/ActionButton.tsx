@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Icon from "./Icon";
 import styled from "styled-components";
 
@@ -23,7 +23,7 @@ const ActionButtonContainer = styled.div`
   }
 `;
 
-const ActionButton: React.SFC<Props> = props => {
+const ActionButton: React.SFC<Props> = (props) => {
   return (
     // @ts-ignore
     <ActionButtonContainer onClick={props.onClick} isActive={props.isActive}>

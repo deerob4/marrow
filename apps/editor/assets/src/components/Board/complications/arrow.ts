@@ -1,11 +1,5 @@
-import {
-  IFixedComplication,
-  DisplayMode,
-  IComplication,
-  complication
-} from "./complications";
-import { ICoord } from "../../../store/board/types";
-import cantor from "../../../utils/cantor";
+import { IFixedComplication, DisplayMode, complication } from "./complications";
+import { ICoord } from "../../../types";
 
 interface IArrowComplication extends IFixedComplication {
   from: ICoord;
@@ -17,7 +11,7 @@ function arrowComplication(from: ICoord, to: ICoord): IArrowComplication {
     type: complication("arrow"),
     displayMode: DisplayMode.Fixed,
     from,
-    to
+    to,
   };
 }
 

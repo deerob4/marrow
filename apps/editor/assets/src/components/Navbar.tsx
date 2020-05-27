@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { User, AppState } from "../types";
@@ -20,11 +20,12 @@ const Navbar: React.SFC<Props> = ({ user, logout }) => {
           <li className="nav-item">
             <a
               className="nav-link"
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault();
                 logout();
               }}
-              href="/logout">
+              href="/logout"
+            >
               Logout
             </a>
           </li>
@@ -35,7 +36,7 @@ const Navbar: React.SFC<Props> = ({ user, logout }) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user
+  user: state.user,
 });
 
 const mapDispatchToProps = { logout };

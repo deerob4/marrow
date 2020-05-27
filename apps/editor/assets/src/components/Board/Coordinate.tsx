@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
-import { Axis } from "../../store/board/types";
+import { Axis } from "../../types";
 
 const CoordContainer = styled.div`
   font-weight: bold;

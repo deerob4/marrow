@@ -11,7 +11,6 @@ import {
 import ActionType from "../constants";
 import indexById from "../utils/indexById";
 import notEquals from "../utils/notEqual";
-import { notStrictEqual } from "assert";
 
 function byId(state: ById<GM> = {}, action: Action): ById<GM> {
   switch (action.type) {
