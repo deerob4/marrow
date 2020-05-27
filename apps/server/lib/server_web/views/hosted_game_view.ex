@@ -1,6 +1,5 @@
 defmodule ServerWeb.HostedGameView do
   use ServerWeb, :view
-  alias Server.Configuration
 
   def render("created.json", %{id: id}) do
     %{status: "created", data: %{id: id}}

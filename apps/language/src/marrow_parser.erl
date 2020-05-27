@@ -26,7 +26,7 @@ identify_variables(Identifier, Args) ->
       {val(Identifier), Args}
   end.
 
--file("/usr/local/Cellar/erlang/21.2.2/lib/erlang/lib/parsetools-2.1.8/include/yeccpre.hrl", 0).
+-file("/usr/lib/erlang/lib/parsetools-2.1.8/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%

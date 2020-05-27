@@ -53,7 +53,7 @@ defmodule Server.Game do
 
   @typep state :: map
 
-  @typep turn_stage :: :waiting_for_roll | :rolling | :moving_pieces | :choosing_card
+  @type turn_stage :: :waiting_for_roll | :rolling | :moving_pieces | :choosing_card
 
   @typep card_action :: String.t()
 

@@ -1,8 +1,6 @@
 defmodule ServerWeb.GameView do
   use ServerWeb, :view
 
-  alias Server.Configuration
-
   def render("index.json", %{games: games}) do
     games = Enum.map(games, &render("show.json", game: &1))
     games |> Jason.encode!() |> Phoenix.HTML.raw()

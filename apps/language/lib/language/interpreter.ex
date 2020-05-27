@@ -69,8 +69,7 @@ defmodule Language.Interpreter do
     end
   end
 
-  def reduce_expr({op, ops}, _state) when op in [:+, :-, :*, :/, :%] do
-    IO.inspect(ops)
+  def reduce_expr({op, _ops}, _state) when op in [:+, :-, :*, :/, :%] do
     {:error, "the `#{op |> to_string |> inspect()}` operator requires >= 2 arguments"}
   end
 

@@ -170,7 +170,7 @@ defmodule ServerWeb.GameChannel do
     broadcast_from(socket, "lobby:role_released", %{role: role})
   end
 
-  def terminate(reason, socket) do
+  def terminate(_reason, _socket) do
     :ok
   end
 end

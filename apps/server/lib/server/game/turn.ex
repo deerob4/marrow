@@ -28,9 +28,6 @@ defmodule Server.Game.Turn do
     {:ok, :dice, game, [{:state_timeout, turn_time_limit, :dice_timeout}]}
   end
 
-  def init({game, _turn_time_limit}) do
-  end
-
   def handle_event({:call, from}, :roll, _state, game) do
     roll = GameState.roll_dice(game)
     {:next_state, :moving, game, [{:reply, from, roll}]}

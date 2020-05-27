@@ -378,11 +378,11 @@ defmodule Server.GameState do
     # states
   end
 
-  defp extract_state({:continue, t}), do: t
-  defp extract_state({:win, _, t}), do: t
-  defp extract_state({:card, _, t}), do: t
-  defp extract_state({:move, _, _, _, t}), do: t
-  defp extract_state({:timeup, t}), do: t
+  # defp extract_state({:continue, t}), do: t
+  # defp extract_state({:win, _, t}), do: t
+  # defp extract_state({:card, _, t}), do: t
+  # defp extract_state({:move, _, _, _, t}), do: t
+  # defp extract_state({:timeup, t}), do: t
 
   defp handle_timeup(%{callbacks: %{handle_timeup: _callback}} = state) do
     state
