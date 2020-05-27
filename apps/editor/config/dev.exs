@@ -69,8 +69,8 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :editor, Editor.Repo,
-  username: "dee",
-  password: "",
+  username: System.get_env("EDITOR_DB_USERNAME"),
+  password: System.get_env("EDITOR_DB_PASSWORD"),
   database: "marrow_editor_dev",
   show_sensitive_data_on_connection_error: true,
   hostname: "localhost",
@@ -79,5 +79,5 @@ config :editor, Editor.Repo,
 config :ex_aws,
   region: "eu-west-2",
   debug_requests: true,
-  access_key_id: "AKIAJTDIP5ITBI5TPGNA",
-  secret_key_id: "th09n8c6k372TXP68XC187uMpzR9h"
+  access_key_id: System.get_env("AWS_ACCESS_KEY_ID"),
+  secret_key_id: System.get_env("AWS_ACCESS_SECRET_KEY_ID")
