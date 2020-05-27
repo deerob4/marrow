@@ -10,10 +10,11 @@ defmodule Editor.Application do
     children = [
       # Start the Ecto repository
       Editor.Repo,
+      {Phoenix.PubSub, name: Editor.PubSub},
       # Start the endpoint when the application starts
       EditorWeb.Endpoint,
       {Registry, name: Registry.EditorRegistry, keys: :unique},
-      {DynamicSupervisor, strategy: :one_for_one, name: Editor.EditorSupervisor}
+      {DynamicSupervisor, strategy: :one_for_one, name: Editor.EditorSupervisor},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

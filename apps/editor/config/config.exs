@@ -15,7 +15,7 @@ config :editor, EditorWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "HgsHvIlB05ep+9mGIh7gP+XS773evL7BI/FlyswQ+Nm6KVwr7uesQu/jLPA9I8G0",
   render_errors: [view: EditorWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Editor.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: Editor.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,

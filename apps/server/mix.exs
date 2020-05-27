@@ -36,10 +36,10 @@ defmodule Server.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.3"},
-      {:phoenix_pubsub, "~> 1.1.2"},
-      {:phoenix_html, "~> 2.13.2"},
-      {:phoenix_live_reload, "~> 1.2-rc", only: :dev},
+      {:phoenix, "~> 1.5"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:phoenix_html, "~> 2.14"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
@@ -47,7 +47,6 @@ defmodule Server.MixProject do
       {:cors_plug, "~> 2.0"},
       {:observer_cli, "~> 1.4"},
       {:gen_state_machine, "~> 2.0"},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"}
     ]
   end
 end
