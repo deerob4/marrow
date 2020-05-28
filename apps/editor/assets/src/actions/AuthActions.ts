@@ -29,5 +29,5 @@ export const logout = () => action(ActionType.LOGOUT);
 export const finishCheckingSession = () =>
   action(ActionType.FINISH_SESSION_CHECK);
 
-  export const setEditingGameId = (gameId: number) =>
+export const setEditingGameId = (gameId: number) =>
   action(ActionType.SET_EDITING_GAME_ID, gameId);

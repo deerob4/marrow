@@ -11,7 +11,7 @@ function arrowComplication(from: ICoord, to: ICoord): IArrowComplication {
     type: complication("arrow"),
     displayMode: DisplayMode.Fixed,
     from,
-    to,
+    to
   };
 }
 

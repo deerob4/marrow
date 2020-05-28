@@ -106,7 +106,7 @@ export function filterByCategory(category: Category, references: Reference[]) {
 
 export function filterByString(searchTerm: string, references: Reference[]) {
   searchTerm = searchTerm.trim().toLowerCase();
-  return references.filter(ref => refContainsString(searchTerm, ref));
+  return references.filter((ref) => refContainsString(searchTerm, ref));
 }
 
 export const references: Reference[] = [
@@ -224,11 +224,7 @@ export const references: Reference[] = [
     category: Category.Players,
     details:
       "Sets the order in which players take their first turn. This defaults to random, but a list of role names can be passed instead. The order roles are listed is the order they will make their turn. The identifier as-written can be given to use the order specified in the roles command.",
-    type: or([
-      identifier("random"),
-      identifier("as-written"),
-      list(role())
-    ]),
+    type: or([identifier("random"), identifier("as-written"), list(role())]),
     allowedInside: allowedSpecific("defgame")
   },
   {
@@ -533,7 +529,8 @@ export const references: Reference[] = [
     name: "choose-card",
     kind: RefType.Command,
     category: Category.Game,
-    details: "Chooses a random card and makes the player play it. Raises if no cards have been defined.",
+    details:
+      "Chooses a random card and makes the player play it. Raises if no cards have been defined.",
     args: [],
     allowedInside: allowedInLogic()
   },

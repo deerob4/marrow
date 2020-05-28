@@ -3,7 +3,8 @@
   "license": "MIT",
   "scripts": {
     "deploy": "webpack --mode production",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "format": "prettier --write \"src/**/*.(js|ts)\""
   },
   "dependencies": {
     "@hot-loader/react-dom": "^16.13.0",
@@ -67,6 +68,7 @@
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
+    "prettier": "^2.0.5",
     "react-hot-loader": "^4.9.0",
     "sass": "^1.15.2",
     "sass-loader": "^8.0.2",

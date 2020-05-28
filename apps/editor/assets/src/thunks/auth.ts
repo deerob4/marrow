@@ -11,8 +11,8 @@ export function signup(account: SignupFields) {
 
     api
       .post("/accounts", { account })
-      .then(r => dispatch(actions.login.success(r.data.data)))
-      .catch(e =>
+      .then((r) => dispatch(actions.login.success(r.data.data)))
+      .catch((e) =>
         dispatch(actions.login.failure(errorString(e.response.data.errors)))
       );
   };
@@ -38,8 +38,8 @@ export function login(credentials: LoginCredentials) {
 
     api
       .post("/sessions", { credentials })
-      .then(r => dispatch(actions.login.success(r.data.data)))
-      .catch(e => {
+      .then((r) => dispatch(actions.login.success(r.data.data)))
+      .catch((e) => {
         const message =
           e.response.status === 401
             ? "Invalid email address or password."
@@ -56,7 +56,7 @@ export function loadSession() {
     if (token) {
       api
         .get(`/sessions/${token}`)
-        .then(r => {
+        .then((r) => {
           try {
             dispatch(actions.login.success(r.data.data));
           } catch {

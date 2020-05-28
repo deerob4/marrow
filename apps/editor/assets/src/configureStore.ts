@@ -12,7 +12,9 @@ export const history = createBrowserHistory();
 
 const composeEnhancers = composeWithDevTools({});
 
-export default function configureStore(initialState: AppState): Store<AppState> {
+export default function configureStore(
+  initialState: AppState
+): Store<AppState> {
   const store = createStore(
     createRootReducer(history),
     initialState,

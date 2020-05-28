@@ -1,5 +1,5 @@
-import axios from 'axios';
-import * as _validate from 'validate.js';
+import axios from "axios";
+import * as _validate from "validate.js";
 
 // Typings aren't all there for validate.js, so create
 // a custom version that satisfies the compiler.
@@ -12,7 +12,7 @@ var validate = _validate;
  */
 function isTrue(value: boolean) {
   if (value) return;
-  return 'must be accepted';
+  return "must be accepted";
 }
 
 /**
@@ -39,15 +39,16 @@ function uniqueValidation(field: string, address: string) {
     if (!field) resolve();
 
     if (field.trim().length) {
-      axios.get(address)
-        .then(r => {
+      axios
+        .get(address)
+        .then((r) => {
           if (r.data.data.isUnique) {
             resolve();
           } else {
-            resolve(' has already been taken');
+            resolve(" has already been taken");
           }
         })
-        .catch(e => reject(e));
+        .catch((e) => reject(e));
     } else {
       resolve();
     }

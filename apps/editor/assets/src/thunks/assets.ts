@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import api, { headerConfig } from "../api";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { UploadingAssets, AppState, RenameAsset } from "../types";
 import {
   uploadImage,
@@ -55,7 +55,7 @@ export function renameImage(imageId: number, newName: string) {
 export function deleteImage(imageId: number) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     const token = getState().auth.token;
-    
+
     dispatch(deleteImageAction.request(imageId));
 
     api

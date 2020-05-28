@@ -1,7 +1,10 @@
 import { Dispatch } from "redux";
 import { AppState } from "../types";
 import api, { headerConfig } from "../api";
-import { newGame as newGameAction, deleteGame as deleteGameAction } from "../actions/GameActions";
+import {
+  newGame as newGameAction,
+  deleteGame as deleteGameAction
+} from "../actions/GameActions";
 
 export function newGame() {
   return (dispatch: Dispatch, getState: () => AppState) => {
@@ -9,9 +12,9 @@ export function newGame() {
 
     api
       .post("/games", {}, headerConfig(token))
-      .then(r => dispatch(newGameAction.success(r.data.data)))
-      .catch(e => {
-        console.error(e.response.data.errors)
+      .then((r) => dispatch(newGameAction.success(r.data.data)))
+      .catch((e) => {
+        console.error(e.response.data.errors);
       });
   };
 }

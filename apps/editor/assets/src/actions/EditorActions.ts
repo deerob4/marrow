@@ -2,7 +2,6 @@ import { action, createAsyncAction } from "typesafe-actions";
 import ActionType from "../constants";
 import { EditorConnect, CompilationSuccess } from "../types";
 
-
 export const connectToEditor = createAsyncAction(
   ActionType.EDITOR_CONNECT_REQUEST,
   ActionType.EDITOR_CONNECT_SUCCESS,

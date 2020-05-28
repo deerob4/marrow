@@ -159,7 +159,7 @@ export type Trait<T> = {
   value: T;
 };
 
-export type ImageTrait = string
+export type ImageTrait = string;
 
 /**
  * The payload received upon successful recompilation of the
@@ -252,14 +252,13 @@ export type RenameAsset<T extends AssetType> = {
   type: T;
 };
 
-
 export enum BoardActionType {
   RESIZE_BOARD = "@@board/RESIZE_BOARD",
   UPDATE_BOARD_STRUCTURE = "@@board/UPDATE_BOARD_STRUCTURE",
   TOGGLE_SHOW_BOARD_PATH_LINES = "@@board/TOGGLE_SHOW_BOARD_PATH_LINES",
   TOGGLE_SHOW_BOARD_ARROWS = "@@board/TOGGLE_SHOW_BOARD_ARROWS",
   TOGGLE_SHOW_UNUSED_TILES = "@@board/TOGGLE_SHOW_UNUSED_TILES",
-  TOGGLE_SHOW_IMAGES = "@@board/TOGGLE_SHOW_IMAGES",
+  TOGGLE_SHOW_IMAGES = "@@board/TOGGLE_SHOW_IMAGES"
 }
 
 export enum Axis {
@@ -365,7 +364,9 @@ export type Action =
   | LocationChangeAction;
 
 export type GameMetadataState = DomainResource<GameMetadata>;
-export type ImagesState = DomainResource<Image> & {byName: {[name: string]: number}}
+export type ImagesState = DomainResource<Image> & {
+  byName: { [name: string]: number };
+};
 export type AudioState = DomainResource<Audio>;
 export type LabelsState = DomainResource<Label>;
 export type CardsState = Card[];
@@ -398,5 +399,5 @@ export type AppState = {
   router: RouterState;
   socket: SocketState;
   traits: TraitMap;
-  deletingImages: number[]
+  deletingImages: number[];
 };

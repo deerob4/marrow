@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components")
   .default;
@@ -19,7 +19,7 @@ module.exports = (env, options) => ({
     ]
   },
   entry: {
-    app: "./src/index.tsx",
+    app: "./src/index.tsx"
   },
   output: {
     filename: "[name].js",

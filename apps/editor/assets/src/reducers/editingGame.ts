@@ -12,7 +12,7 @@ function metadataId(state = 0, action: Action) {
 
     case ActionType.EDITOR_LEAVE:
       return 0;
-    
+
     default:
       return state;
   }

@@ -1,13 +1,6 @@
 import { combineReducers } from "redux";
 import indexById from "../utils/indexById";
-import {
-  prop,
-  assoc,
-  dissoc,
-  assocPath,
-  append,
-  filter,
-} from "ramda";
+import { prop, assoc, dissoc, assocPath, append, filter } from "ramda";
 import { ById, Action, Asset, ImagesState } from "../types";
 
 import ActionType from "../constants";
