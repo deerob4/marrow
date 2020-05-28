@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import api, { headerConfig } from "../api";
-import * as uuid from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import { UploadingAssets, AppState, RenameAsset } from "../types";
 import {
   uploadImage,
@@ -18,7 +18,7 @@ export function uploadImages(files: FileList) {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const id = uuid.v4();
+      const id = uuidv4();
 
       assetIds[id] = file;
       formData.append(`files[${i}]`, file);

@@ -4,7 +4,6 @@ import api from "../api";
 import { SignupFields, LoginCredentials, AppState } from "../types";
 import * as actions from "../actions/AuthActions";
 import TokenStore from "./TokenStore";
-import { push } from "connected-react-router";
 
 export function signup(account: SignupFields) {
   return (dispatch: Dispatch) => {

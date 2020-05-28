@@ -5,7 +5,9 @@
     "pretty": true,
     "target": "es2018",
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    // "types": ["react", "typescript", "styled-components"]
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

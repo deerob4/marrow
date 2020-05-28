@@ -1,10 +1,11 @@
 const path = require("path");
 const webpack = require("webpack");
-const glob = require("glob");
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components")
   .default;
@@ -45,8 +46,10 @@ module.exports = (env, options) => ({
       },
       {
         test: /\.tsx?$/,
-        loader: "awesome-typescript-loader",
+        loader: "ts-loader",
+        exclude: /node_modules/,
         options: {
+          transpileOnly: true,
           getCustomTransformers: () => ({
             before: [styledComponentsTransformer]
           })
@@ -63,6 +66,7 @@ module.exports = (env, options) => ({
   plugins: [
     new MiniCssExtractPlugin({ filename: "../css/app.css" }),
     new CopyWebpackPlugin([{ from: "static/", to: "../" }]),
+    new ForkTsCheckerWebpackPlugin()
     // new webpack.DefinePlugin({
     //   "process.env.NODE_ENV": JSON.stringify("production")
     // })
