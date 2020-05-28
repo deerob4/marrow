@@ -6,7 +6,7 @@ interface Props {
   isSpinning?: boolean;
 }
 
-const Icon: React.SFC<Props> = ({ name, isSpinning = false }) => {
+const Icon: React.FC<Props> = ({ name, isSpinning = false }) => {
   return (
     <i className={classnames("fas", `fa-${name}`, { "fa-spin": isSpinning })} />
   );

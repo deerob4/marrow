@@ -33,7 +33,7 @@ function traits(state: TraitMap = Map(), action: Action) {
   switch (action.type) {
     case ActionTypes.RECOMPILE_SUCCESS:
       const { images, labels, audio, board } = action.payload;
-      let newState = compose(
+      const newState = compose(
         updateTraits(images, (t, image) => ({ ...t, image })),
         updateTraits(audio, (t, audio) => ({ ...t, audio })),
         updateTraits(labels, (t, labels) => ({ ...t, labels }))
@@ -41,7 +41,7 @@ function traits(state: TraitMap = Map(), action: Action) {
       return setPaths(board.paths)(newState);
 
     case ActionTypes.EDITOR_CONNECT_SUCCESS:
-      let s = compose(
+      const s = compose(
         updateTraits(action.payload.imageTraits, (t, image) => ({
           ...t,
           image

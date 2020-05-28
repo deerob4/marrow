@@ -24,7 +24,7 @@ function byId(state: ById<GM> = {}, action: Action): ById<GM> {
       return assoc(action.payload.id, action.payload, state);
 
     // Make sure we keep the title in sync with the game source.
-    case ActionType.EDIT_GAME_SOURCE:
+    case ActionType.EDIT_GAME_SOURCE: {
       const { gameId, newSource } = action.payload;
       const title = extractTitle(newSource);
 
@@ -33,6 +33,7 @@ function byId(state: ById<GM> = {}, action: Action): ById<GM> {
       } else {
         return state;
       }
+    }
 
     case ActionType.TOGGLE_GAME_VISIBILITY_RESULT:
       return assocPath(

@@ -33,12 +33,12 @@ const AssetGrid = styled.div`
   grid-gap: 15px;
 `;
 
-const AssetManager: React.SFC<Props> = (props) => {
+const AssetManager: React.FC<Props> = (props) => {
   return (
     <Card title="Asset Manager" headerType="outside">
       <p>
-        You can upload images and audio files to use as part of your game. Add them
-        here and reference them through the <code>metadata</code> block.
+        You can upload images and audio files to use as part of your game. Add
+        them here and reference them through the <code>metadata</code> block.
       </p>
 
       <AssetBlock>
@@ -61,14 +61,11 @@ const AssetManager: React.SFC<Props> = (props) => {
 
 const mapStateToProps = (state: AppState) => ({
   images: Object.values(state.images.byId),
-  audio: Object.values(state.audio.byId),
+  audio: Object.values(state.audio.byId)
 });
 
 const mapDispatchToProps = {
-  uploadImages,
+  uploadImages
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AssetManager);
+export default connect(mapStateToProps, mapDispatchToProps)(AssetManager);

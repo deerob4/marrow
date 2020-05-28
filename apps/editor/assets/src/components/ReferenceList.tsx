@@ -15,7 +15,7 @@ const CategoryContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const ReferenceList: React.SFC<Props> = (props) => {
+const ReferenceList: React.FC<Props> = (props) => {
   if (!props.references.length) return null;
 
   return (
@@ -23,8 +23,7 @@ const ReferenceList: React.SFC<Props> = (props) => {
       <Accordion
         title={props.name}
         isShown={props.isShown}
-        toggle={props.toggleShown}
-      >
+        toggle={props.toggleShown}>
         {props.references.map((ref) => (
           <ReferenceBlock key={ref.name} reference={ref} />
         ))}

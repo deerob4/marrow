@@ -16,7 +16,7 @@ function description(game: Game) {
   return `${desc} For ${players}.`;
 }
 
-export const GameInfo: React.SFC<Game> = (game) => {
+export const GameInfo: React.FC<Game> = (game) => {
   return (
     <div className="game-info">
       <h3 className="game__title">{game.title}</h3>

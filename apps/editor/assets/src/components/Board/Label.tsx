@@ -30,7 +30,7 @@ const Body = styled.p`
   margin-bottom: 0;
 `;
 
-const Label: React.SFC<Props> = ({ title, body }) => {
+const Label: React.FC<Props> = ({ title, body }) => {
   return (
     <LabelContainer>
       <Title>{title}</Title>

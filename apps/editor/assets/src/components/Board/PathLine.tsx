@@ -61,7 +61,7 @@ interface IArrowProps {
   showArrows: boolean;
 }
 
-const PathLine: React.SFC<Props> = ({ pathLine, tileSize, showArrows }) => {
+const PathLine: React.FC<Props> = ({ pathLine, tileSize, showArrows }) => {
   const direction = pathDirection(pathLine);
   const distance = pathDistance(pathLine, direction);
   const arrowProps: IArrowProps = { direction, distance, showArrows };
@@ -150,7 +150,7 @@ function pathDirection({ from, to }: IPath): PathDirection {
 
 const mapStateToProps = (state: AppState) => ({
   tileSize: state.board.options.tileSize,
-  showArrows: state.board.options.showArrows,
+  showArrows: state.board.options.showArrows
 });
 
 export default connect(mapStateToProps)(PathLine);

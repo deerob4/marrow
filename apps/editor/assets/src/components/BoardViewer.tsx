@@ -5,7 +5,7 @@ import BoardControls from "./Board/BoardControls";
 
 interface Props {}
 
-const BoardViewer: React.SFC<Props> = (props) => {
+const BoardViewer: React.FC<Props> = (props) => {
   return (
     <Card title="Board Viewer" headerType="outside">
       <BoardControls />

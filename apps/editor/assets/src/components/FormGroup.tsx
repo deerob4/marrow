@@ -13,10 +13,10 @@ interface Props {
  * the field's label, the field itself, and any errors
  * associated witht he field.
  */
-const FormGroup: React.SFC<Props> = (props) => {
+const FormGroup: React.FC<Props> = (props) => {
   const className = classnames({
     "form-group": true,
-    "form-group--error": props.errors ? props.errors.length > 0 : false,
+    "form-group--error": props.errors ? props.errors.length > 0 : false
   });
 
   return (
@@ -25,7 +25,9 @@ const FormGroup: React.SFC<Props> = (props) => {
 
       {props.children}
 
-      {props.errors ? <div className="text-danger">{props.errors[0]}</div> : null}
+      {props.errors ? (
+        <div className="text-danger">{props.errors[0]}</div>
+      ) : null}
     </div>
   );
 };

@@ -81,7 +81,7 @@ interface ConfigProps {
   onSubmit: (config: Config) => void;
 }
 
-export const ConfigForm: React.SFC<ConfigProps> = (props) => {
+export const ConfigForm: React.FC<ConfigProps> = (props) => {
   const {
     setIsPublic,
     setAllowSpectators,

@@ -36,7 +36,7 @@ export interface ILineStyle {
 
 const tileKey = (coord: ICoord) => `(${coord.x},${coord.y})`;
 
-const Board: React.SFC<Props> = ({ structure, tileSize }) => {
+const Board: React.FC<Props> = ({ structure, tileSize }) => {
   return (
     <BoardStyleContainer width={structure.dimensions.width} tileSize={tileSize}>
       {renderTiles(structure.dimensions)}
@@ -44,22 +44,22 @@ const Board: React.SFC<Props> = ({ structure, tileSize }) => {
   );
 };
 
-type CoordPredicate = ((coord: ICoord) => boolean);
+type CoordPredicate = (coord: ICoord) => boolean;
 
 const iSYCoord: CoordPredicate = where({
   x: equals(0),
-  y: notEquals(0),
+  y: notEquals(0)
 });
 
 const isXCoord: CoordPredicate = where({
   x: notEquals(0),
-  y: equals(0),
+  y: equals(0)
 });
 
 const isEmptyTile: CoordPredicate = allPass([
   complement(iSYCoord),
   complement(isXCoord),
-  where({ y: equals(0) }),
+  where({ y: equals(0) })
 ]);
 
 const renderTile = cond([
@@ -67,7 +67,7 @@ const renderTile = cond([
   [iSYCoord, ({ y }) => <Coordinate key={`y-${y}`} value={y - 1} />],
   [isEmptyTile, always(<EmptyTile key="empty-tile" />)],
   // @ts-ignore
-  [R.T, (coord) => <Tile key={tileKey(coord)} coord={coord} />],
+  [R.T, (coord) => <Tile key={tileKey(coord)} coord={coord} />]
 ]);
 
 const renderTiles = (dimensions: IDimensions) => {
@@ -86,9 +86,9 @@ const renderTiles = (dimensions: IDimensions) => {
 const mapStateToProps = (state: AppState) => ({
   structure: {
     dimensions: state.board.dimensions,
-    paths: state.board.paths,
+    paths: state.board.paths
   },
-  tileSize: state.board.options.tileSize,
+  tileSize: state.board.options.tileSize
 });
 
 // @ts-ignore

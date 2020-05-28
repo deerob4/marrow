@@ -5,7 +5,7 @@ interface Props {
   gameUrl: string;
 }
 
-export const HostSuccessPanel: React.SFC<Props> = ({ gameUrl }) => {
+export const HostSuccessPanel: React.FC<Props> = ({ gameUrl }) => {
   const url = `http://play.marrow.dk/${gameUrl}`;
 
   return (

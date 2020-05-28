@@ -22,7 +22,7 @@ function errorString(errors: { [field: string]: string[] }) {
   const start =
     "There were problems encountered with your details:<ul style='padding-left:0;margin-bottom:0;padding-top:5px;'>";
 
-  let x = Object.keys(errors).reduce((message, field) => {
+  const x = Object.keys(errors).reduce((message, field) => {
     const error = `<li style="list-style-type:none;">${capitalize(field)}: ${
       errors[field][0]
     }</li>`;

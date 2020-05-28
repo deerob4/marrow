@@ -23,7 +23,7 @@ const ActionButtonContainer = styled.div`
   }
 `;
 
-const ActionButton: React.SFC<Props> = (props) => {
+const ActionButton: React.FC<Props> = (props) => {
   return (
     // @ts-ignore
     <ActionButtonContainer onClick={props.onClick} isActive={props.isActive}>

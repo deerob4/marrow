@@ -11,7 +11,7 @@ interface Props {
   value: number;
 }
 
-const Coordinate: React.SFC<Props> = ({ value }) => {
+const Coordinate: React.FC<Props> = ({ value }) => {
   return <CoordContainer>{value}</CoordContainer>;
 };
 

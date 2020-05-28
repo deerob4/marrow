@@ -23,7 +23,7 @@ interface GSProps {
   onChange: (id: number) => void;
 }
 
-const GameSelect: React.SFC<GSProps> = (props) => {
+const GameSelect: React.FC<GSProps> = (props) => {
   function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const id = parseInt(e.target.value, 10);
     return props.onChange(id);
@@ -125,7 +125,7 @@ function updateState(state: State, action: AppAction): State {
   }
 }
 
-const HostGame: React.SFC<AppProps> = ({ games }) => {
+const HostGame: React.FC<AppProps> = ({ games }) => {
   const [state, dispatch] = useReducer(updateState, defaultState);
 
   function hostGame(config: Config) {

@@ -9,7 +9,7 @@ interface Props {
   logout: () => void;
 }
 
-const Navbar: React.SFC<Props> = ({ user, logout }) => {
+const Navbar: React.FC<Props> = ({ user, logout }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
       <Link className="navbar-brand" to="/games">
@@ -24,8 +24,7 @@ const Navbar: React.SFC<Props> = ({ user, logout }) => {
                 e.preventDefault();
                 logout();
               }}
-              href="/logout"
-            >
+              href="/logout">
               Logout
             </a>
           </li>
@@ -36,12 +35,9 @@ const Navbar: React.SFC<Props> = ({ user, logout }) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user,
+  user: state.user
 });
 
 const mapDispatchToProps = { logout };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

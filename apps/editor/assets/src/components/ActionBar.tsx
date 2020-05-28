@@ -28,7 +28,7 @@ const TopActions = styled.div``;
 
 const BottomActions = styled.div``;
 
-const ActionBar: React.SFC<Props> = ({ topActions, bottomActions }) => {
+const ActionBar: React.FC<Props> = ({ topActions, bottomActions }) => {
   function renderActionButton(action: IActionButton) {
     return <ActionButton key={action.name} {...action} />;
   }

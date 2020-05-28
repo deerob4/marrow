@@ -6,7 +6,7 @@ import {
   toggleShowPathLines,
   toggleShowArrows,
   toggleShowUnusedTiles,
-  toggleShowImages,
+  toggleShowImages
 } from "../../actions/BoardActions";
 import { AppState } from "../../types";
 
@@ -27,7 +27,7 @@ interface Props {
   toggleShowImages: typeof toggleShowImages;
 }
 
-const BoardControls: React.SFC<Props> = (props) => {
+const BoardControls: React.FC<Props> = (props) => {
   return (
     <div className="board-controls">
       <div className="form-group">
@@ -100,7 +100,7 @@ const BoardControls: React.SFC<Props> = (props) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  ...state.board.options,
+  ...state.board.options
 });
 
 const mapDispatchToProps = {
@@ -108,10 +108,7 @@ const mapDispatchToProps = {
   toggleShowArrows,
   toggleShowPathLines,
   toggleShowUnusedTiles,
-  toggleShowImages,
+  toggleShowImages
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BoardControls);
+export default connect(mapStateToProps, mapDispatchToProps)(BoardControls);

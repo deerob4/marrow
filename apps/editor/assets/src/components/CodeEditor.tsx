@@ -13,7 +13,7 @@ interface Props {
   value: string;
 }
 
-const CodeEditor: React.SFC<Props> = ({ onChange, value }) => {
+const CodeEditor: React.FC<Props> = ({ onChange, value }) => {
   return (
     <CodeMirror
       value={value}
@@ -22,7 +22,7 @@ const CodeEditor: React.SFC<Props> = ({ onChange, value }) => {
         lineNumbers: true,
         matchBrackets: true,
         smartIndent: false,
-        mode: "clojure",
+        mode: "clojure"
       }}
       editorDidMount={(e) => parinferCodeMirror.init(e)}
       onBeforeChange={(e, s, v) => onChange(v)}

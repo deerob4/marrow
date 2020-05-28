@@ -48,7 +48,7 @@ export interface Block {
   required: boolean;
 }
 
-export interface Function {
+export interface Func {
   kind: RefType.Function;
   args: MarrowType[];
   returnType: MarrowType;
@@ -78,7 +78,7 @@ export interface Callback {
 }
 
 export type Reference = RefInfo &
-  (Block | Function | Command | Property | GlobalVar | Callback);
+  (Block | Func | Command | Property | GlobalVar | Callback);
 
 function allowedSpecific(block: string): AllowedInside {
   return { kind: "specific", block };
@@ -96,15 +96,24 @@ function refContainsString(searchTerm: string, ref: Reference) {
   );
 }
 
-export function filterByKind(kind: RefType, references: Reference[]) {
+export function filterByKind(
+  kind: RefType,
+  references: Reference[]
+): Reference[] {
   return references.filter(({ kind: refKind }) => kind === refKind);
 }
 
-export function filterByCategory(category: Category, references: Reference[]) {
+export function filterByCategory(
+  category: Category,
+  references: Reference[]
+): Reference[] {
   return references.filter(({ category: c }) => c === category);
 }
 
-export function filterByString(searchTerm: string, references: Reference[]) {
+export function filterByString(
+  searchTerm: string,
+  references: Reference[]
+): Reference[] {
   searchTerm = searchTerm.trim().toLowerCase();
   return references.filter((ref) => refContainsString(searchTerm, ref));
 }

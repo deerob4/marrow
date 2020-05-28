@@ -40,10 +40,10 @@ const Container = styled.div`
   background-size: cover;
 `;
 
-const Tile: React.SFC<Props> = (props) => {
+const Tile: React.FC<Props> = (props) => {
   const className = getTileClass(props.coord, props.boardDimensions);
   const pathLine: IPath | undefined = props.traits.pathLine && {
-    ...props.traits.pathLine,
+    ...props.traits.pathLine
     // from: props.coord
   };
   const [isHovering, setIsHovering] = useState(false);
@@ -64,8 +64,7 @@ const Tile: React.SFC<Props> = (props) => {
       tileSize={props.tileSize}
       image={props.imageUrl}
       onMouseOver={onHover}
-      onMouseLeave={onLeave}
-    >
+      onMouseLeave={onLeave}>
       {pathLine && props.showPathLines && <PathLine pathLine={pathLine} />}
       {isHovering && props.traits.labels && props.traits.labels.length
         ? props.traits.labels.map((label, i) => <Label key={i} {...label} />)
@@ -83,7 +82,7 @@ function getTileClass({ x, y }: ICoord, { width, height }: IDimensions) {
     "tile--top-edge": y === 0,
     "tile--left-edge": x === 0,
     "tile--bottom-edge": y === height,
-    "tile--right-edge": x === width,
+    "tile--right-edge": x === width
   });
 }
 
@@ -95,7 +94,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
     boardDimensions: state.board.dimensions,
     traits: state.traits.get(coordHash) || {},
     imageUrl: getImageUrl(state, coordHash),
-    hash: coordHash,
+    hash: coordHash
   };
 };
 

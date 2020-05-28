@@ -18,9 +18,9 @@ const StatusContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const StatusBar: React.SFC<Props> = (props) => {
-  let x = classnames("status-bar", {
-    "status-bar--error": props.compileStatus.type === "error",
+const StatusBar: React.FC<Props> = (props) => {
+  const x = classnames("status-bar", {
+    "status-bar--error": props.compileStatus.type === "error"
   });
 
   return (

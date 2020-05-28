@@ -33,7 +33,7 @@ const Logo = styled.h1`
   margin-bottom: 0;
 `;
 
-const Auth: React.SFC<Props> = (props) => {
+const Auth: React.FC<Props> = (props) => {
   return (
     <AuthContainer>
       <InnerAuth>
@@ -44,7 +44,10 @@ const Auth: React.SFC<Props> = (props) => {
             path="/signin"
             render={() => <Link to="signup">Create Account</Link>}
           />
-          <Route path="/signup" render={() => <Link to="signin">Sign In</Link>} />
+          <Route
+            path="/signup"
+            render={() => <Link to="signin">Sign In</Link>}
+          />
         </div>
         <div className="pt-3">
           <Switch>

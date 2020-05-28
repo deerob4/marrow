@@ -33,7 +33,7 @@ const FinishMarker = styled(Container)`
 /**
  * Denotes a specific point on the board.
  */
-const Marker: React.SFC<Props> = ({ position }) => {
+const Marker: React.FC<Props> = ({ position }) => {
   switch (position) {
     case MarkerPosition.Start:
       return <StartMarker />;

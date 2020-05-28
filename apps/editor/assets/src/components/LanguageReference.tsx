@@ -6,7 +6,7 @@ import {
   RefType,
   Reference,
   filterByKind,
-  filterByString,
+  filterByString
 } from "../utils/reference_new";
 
 interface SearchStatus {
@@ -15,11 +15,11 @@ interface SearchStatus {
   results: Reference[];
 }
 
-const LanguageReference: React.SFC<{}> = () => {
+const LanguageReference: React.FC<{}> = () => {
   const [searchStatus, setSearchStatus] = useState<SearchStatus>({
     searching: false,
     query: "",
-    results: [],
+    results: []
   });
 
   const [openBlocks, setOpenBlocks] = useState<RefType[]>([]);
@@ -73,7 +73,7 @@ const LanguageReference: React.SFC<{}> = () => {
       setSearchStatus({
         searching: true,
         query,
-        results,
+        results
       });
 
       setOpenBlocks(results.map((r) => r.kind));
@@ -99,7 +99,9 @@ const LanguageReference: React.SFC<{}> = () => {
           value={searchStatus.query}
           onChange={handleFilter}
         />
-        {searchStatus.searching ? renderSearchResults() : allRefLists(references)}
+        {searchStatus.searching
+          ? renderSearchResults()
+          : allRefLists(references)}
       </>
     </Card>
   );

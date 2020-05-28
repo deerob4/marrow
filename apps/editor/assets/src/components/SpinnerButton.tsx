@@ -6,7 +6,7 @@ interface Props {
   isSpinning: boolean;
 }
 
-const SpinnerButton: React.SFC<Props> = ({ text, isSpinning }) => {
+const SpinnerButton: React.FC<Props> = ({ text, isSpinning }) => {
   return (
     <button disabled={isSpinning} className="btn btn-primary">
       {text}

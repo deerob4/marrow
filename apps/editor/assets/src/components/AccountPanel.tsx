@@ -54,7 +54,7 @@ const AccountTitleBar = styled.div`
   margin-bottom: 25px;
 `;
 
-const AccountPanel: React.SFC<Props> = (props) => {
+const AccountPanel: React.FC<Props> = (props) => {
   function navigateToGame(gameId: number) {
     loadGame(gameId);
   }
@@ -122,11 +122,8 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
   return {
     newGame: () => dispatch(newGame()),
-    deleteGame: (gameId: number) => dispatch(deleteGame(gameId)),
+    deleteGame: (gameId: number) => dispatch(deleteGame(gameId))
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AccountPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountPanel);

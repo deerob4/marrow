@@ -98,14 +98,14 @@ class Editor extends React.Component<Props, State> {
 
   renderPanel = () => {
     switch (this.state.currentPanel) {
-      case Panel.LanguageReference:
-        return <LanguageReference />;
-      case Panel.GameProperties:
-        return <GameProperties updateProperties={console.log} />;
-      case Panel.AssetManager:
-        return <AssetManager />;
-      case Panel.BoardViewer:
-        return <BoardViewer />;
+    case Panel.LanguageReference:
+      return <LanguageReference />;
+    case Panel.GameProperties:
+      return <GameProperties updateProperties={console.log} />;
+    case Panel.AssetManager:
+      return <AssetManager />;
+    case Panel.BoardViewer:
+      return <BoardViewer />;
     }
   };
 

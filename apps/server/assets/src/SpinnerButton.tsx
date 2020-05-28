@@ -9,7 +9,7 @@ interface Props {
   element?: React.ButtonHTMLAttributes<HTMLButtonElement>;
 }
 
-const SpinnerButton: React.SFC<Props> = (props) => {
+const SpinnerButton: React.FC<Props> = (props) => {
   const { text, isSpinning } = props;
   const className = classnames("btn", "btn-primary", props.className);
 

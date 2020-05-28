@@ -3,7 +3,7 @@ import * as _validate from "validate.js";
 
 // Typings aren't all there for validate.js, so create
 // a custom version that satisfies the compiler.
-var validate = _validate;
+const validate = _validate;
 
 /**
  * Ensures that the value passed is `true`, otherwise
@@ -21,7 +21,7 @@ function isTrue(value: boolean) {
  * @param {string} email - Email to validate.
  */
 function uniqueEmail(email: string) {
-  var address = `/api/account/validate?email=${email}`;
+  const address = `/api/account/validate?email=${email}`;
   return uniqueValidation(email, address);
 }
 

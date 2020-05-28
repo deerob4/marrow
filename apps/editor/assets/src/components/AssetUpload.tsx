@@ -25,7 +25,7 @@ const Upload = styled.div`
   }
 `;
 
-const AssetUpload: React.SFC<Props> = ({ onFilesSelected, accept }) => {
+const AssetUpload: React.FC<Props> = ({ onFilesSelected, accept }) => {
   return (
     <FileUpload onFilesSelected={onFilesSelected} accept={accept}>
       {(handleFileSelect, isUploading) => (

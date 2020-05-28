@@ -6,24 +6,24 @@ import {
   RefType,
   RefInfo,
   Block,
-  Function,
+  Func,
   Property,
   Command,
   GlobalVar,
   Callback,
-  AllowedInside,
+  AllowedInside
 } from "../utils/reference_new";
 
 import {
   typeToString,
   formatFunction,
   formatArgList,
-  MarrowType,
+  MarrowType
 } from "../utils/marrow_type";
 
 import { Badge, BadgeSeparator } from "./Badge";
 
-const Reference: React.SFC<{}> = (props) => {
+const Reference: React.FC<unknown> = (props) => {
   return (
     <>
       <div className="reference">{props.children}</div>
@@ -32,23 +32,23 @@ const Reference: React.SFC<{}> = (props) => {
   );
 };
 
-const Name: React.SFC<{ name: string }> = ({ name }) => (
+const Name: React.FC<{ name: string }> = ({ name }: { name: string }) => (
   <h6 className="reference__name">{name}</h6>
 );
 
-const Details: React.SFC<{ details: string }> = ({ details }) => (
+const Details: React.FC<{ details: string }> = ({ details }) => (
   // <p className="reference__details">
   <ReactMarkdown className="reference__details" source={details} />
   // </p>
 );
 
-const Type: React.SFC<{ type: MarrowType }> = ({ type }) => (
+const Type: React.FC<{ type: MarrowType }> = ({ type }) => (
   <BadgeSeparator amount={2}>
     <Badge text={typeToString(type)} type="secondary" />
   </BadgeSeparator>
 );
 
-const Requirements: React.SFC<{ required: boolean }> = ({ required }) => {
+const Requirements: React.FC<{ required: boolean }> = ({ required }) => {
   if (!required) return null;
 
   return (
@@ -58,7 +58,7 @@ const Requirements: React.SFC<{ required: boolean }> = ({ required }) => {
   );
 };
 
-const Example: React.SFC<{ example?: string }> = ({ example }) => {
+const Example: React.FC<{ example?: string }> = ({ example }) => {
   if (!example) return null;
 
   return (
@@ -69,7 +69,7 @@ const Example: React.SFC<{ example?: string }> = ({ example }) => {
   );
 };
 
-const Signature: React.SFC<{
+const Signature: React.FC<{
   args: MarrowType[];
   returnType: MarrowType;
 }> = (props) => {
@@ -80,18 +80,18 @@ const Signature: React.SFC<{
   );
 };
 
-const ArgumentList: React.SFC<{ args: MarrowType[] }> = ({ args }) => {
+const ArgumentList: React.FC<{ args: MarrowType[] }> = ({ args }) => {
   return <span className="reference__type">{formatArgList(args)}</span>;
 };
 
-const AllowedInside: React.SFC<{ allowed: AllowedInside }> = ({ allowed }) => {
+const AllowedInside: React.FC<{ allowed: AllowedInside }> = ({ allowed }) => {
   const allowedStr =
     allowed.kind === "specific" ? allowed.block : "events and triggers";
 
   return <p className="property_allowed_inside">Allowed in: {allowedStr}</p>;
 };
 
-const BlockReference: React.SFC<{ block: Block & RefInfo }> = ({ block }) => (
+const BlockReference: React.FC<{ block: Block & RefInfo }> = ({ block }) => (
   <Reference>
     <Name name={block.name} />
     <Requirements required={block.required} />
@@ -99,8 +99,8 @@ const BlockReference: React.SFC<{ block: Block & RefInfo }> = ({ block }) => (
   </Reference>
 );
 
-const PropertyReference: React.SFC<{ property: Property & RefInfo }> = ({
-  property,
+const PropertyReference: React.FC<{ property: Property & RefInfo }> = ({
+  property
 }) => (
   <Reference>
     <Name name={property.name} />
@@ -110,7 +110,7 @@ const PropertyReference: React.SFC<{ property: Property & RefInfo }> = ({
   </Reference>
 );
 
-const FunctionReference: React.SFC<{ func: Function & RefInfo }> = ({ func }) => (
+const FunctionReference: React.FC<{ func: Func & RefInfo }> = ({ func }) => (
   <Reference>
     <Name name={func.name} />
     <Signature {...func} />
@@ -119,8 +119,8 @@ const FunctionReference: React.SFC<{ func: Function & RefInfo }> = ({ func }) =>
   </Reference>
 );
 
-const CallbackReference: React.SFC<{ callback: Callback & RefInfo }> = ({
-  callback,
+const CallbackReference: React.FC<{ callback: Callback & RefInfo }> = ({
+  callback
 }) => (
   <Reference>
     <Name name={callback.name} />
@@ -129,8 +129,8 @@ const CallbackReference: React.SFC<{ callback: Callback & RefInfo }> = ({
   </Reference>
 );
 
-const CommandReference: React.SFC<{ command: Command & RefInfo }> = ({
-  command,
+const CommandReference: React.FC<{ command: Command & RefInfo }> = ({
+  command
 }) => (
   <Reference>
     <Name name={command.name} />
@@ -140,8 +140,8 @@ const CommandReference: React.SFC<{ command: Command & RefInfo }> = ({
   </Reference>
 );
 
-const GlobalVarReference: React.SFC<{ globalVar: GlobalVar & RefInfo }> = ({
-  globalVar,
+const GlobalVarReference: React.FC<{ globalVar: GlobalVar & RefInfo }> = ({
+  globalVar
 }) => (
   <Reference>
     <Name name={globalVar.name} />
@@ -154,7 +154,7 @@ interface Props {
   reference: Reference;
 }
 
-const ReferenceBlock: React.SFC<Props> = ({ reference }) => {
+const ReferenceBlock: React.FC<Props> = ({ reference }) => {
   switch (reference.kind) {
     case RefType.Block:
       return <BlockReference block={reference} />;

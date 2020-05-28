@@ -6,7 +6,7 @@ interface Props {
   text: string;
 }
 
-export const CopyButton: React.SFC<Props> = ({ text }) => {
+export const CopyButton: React.FC<Props> = ({ text }) => {
   const [urlCopied, setUrlCopied] = useState(false);
 
   function copyUrl() {

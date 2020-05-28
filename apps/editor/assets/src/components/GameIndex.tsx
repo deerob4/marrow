@@ -43,7 +43,7 @@ const TopRow = styled.div`
   margin-bottom: 10px;
 `;
 
-const GameIndex: React.SFC<Props> = (props) => {
+const GameIndex: React.FC<Props> = (props) => {
   useTitle("Your Games");
 
   return (
@@ -73,13 +73,12 @@ const GameIndex: React.SFC<Props> = (props) => {
 };
 
 const mapStateToProps = (state: AppState) => {
-  let games = state.gameMetadata.allIds.map((id) => state.gameMetadata.byId[id]);
+  const games = state.gameMetadata.allIds.map(
+    (id) => state.gameMetadata.byId[id]
+  );
   return { games };
 };
 
 const mapDispatchToProps = { newGame: newGame, deleteGame: () => null };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GameIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(GameIndex);

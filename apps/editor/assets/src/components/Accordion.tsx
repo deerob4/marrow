@@ -8,7 +8,7 @@ interface Props {
   toggle: () => void;
 }
 
-const Accordion: React.SFC<Props> = ({ title, isShown, toggle, children }) => {
+const Accordion: React.FC<Props> = ({ title, isShown, toggle, children }) => {
   const className = classnames("accordion", { "accordion--open": isShown });
 
   function toggleAccordion() {
@@ -21,10 +21,9 @@ const Accordion: React.SFC<Props> = ({ title, isShown, toggle, children }) => {
         style={{
           cursor: "pointer",
           display: "inline-block",
-          fontWeight: "bold",
+          fontWeight: "bold"
         }}
-        onClick={toggleAccordion}
-      >
+        onClick={toggleAccordion}>
         <span className="mr-2">{title}</span>
         {isShown ? <Icon name="caret-up" /> : <Icon name="caret-down" />}
       </h6>

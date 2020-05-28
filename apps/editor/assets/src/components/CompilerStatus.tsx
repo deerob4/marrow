@@ -41,12 +41,9 @@ function addFullStop(string: string) {
   }
 }
 
-const formatError = compose(
-  capitaliseFirstLetter,
-  addFullStop
-);
+const formatError = compose(capitaliseFirstLetter, addFullStop);
 
-const CompilerStatus: React.SFC<Props> = (props) => {
+const CompilerStatus: React.FC<Props> = (props) => {
   if (props.isOkay) {
     return (
       <StatusContainer>
@@ -64,7 +61,7 @@ const CompilerStatus: React.SFC<Props> = (props) => {
   }
 
   if (props.isError && props.errorMessage) {
-    let errorMessage = formatError(props.errorMessage);
+    const errorMessage = formatError(props.errorMessage);
 
     return (
       <StatusContainer>
@@ -87,7 +84,7 @@ const mapStateToProps = (state: AppState) => {
     isOkay: compileStatus.type === "ok",
     isCompiling: compileStatus.type === "compiling",
     isError: compileStatus.type === "error",
-    errorMessage: compileStatus.type === "error" ? compileStatus.error : null,
+    errorMessage: compileStatus.type === "error" ? compileStatus.error : null
   };
 };
 

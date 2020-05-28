@@ -5,7 +5,7 @@ interface Props {
   isSpinning: boolean;
 }
 
-const Spinner: React.SFC<Props> = ({ isSpinning }) => {
+const Spinner: React.FC<Props> = ({ isSpinning }) => {
   return <i className={classnames("fa", "fa-spinner", { "fa-spin": isSpinning })} />;
 };
 

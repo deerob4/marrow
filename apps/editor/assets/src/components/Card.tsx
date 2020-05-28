@@ -7,7 +7,7 @@ interface Props {
   headerType: headerType;
 }
 
-const Card: React.SFC<Props> = ({ title, headerType, children }) => {
+const Card: React.FC<Props> = ({ title, headerType, children }) => {
   function renderOutsideHeader(headerType: headerType) {
     if (headerType !== "outside") return null;
     return <div className="card-header">{title}</div>;

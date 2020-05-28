@@ -35,7 +35,7 @@ export const Title = styled.h3`
   font-size: 20px;
 `;
 
-const GameSelect: React.SFC<Props> = ({ game, loadGame, deleteGame }) => {
+const GameSelect: React.FC<Props> = ({ game, loadGame, deleteGame }) => {
   return (
     <GameSelectContainer key={game.id}>
       <GameThumbnail onClick={loadGame} src={game.coverUrl} />
@@ -56,11 +56,8 @@ const mapDispatchToProps = (dispatch: Dispatch, props: Props) => {
     deleteGame: () => {
       // @ts-ignore
       dispatch(deleteGame(props.game.id));
-    },
+    }
   };
 };
 
-export default connect(
-  () => ({}),
-  mapDispatchToProps
-)(GameSelect);
+export default connect(() => ({}), mapDispatchToProps)(GameSelect);
