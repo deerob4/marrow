@@ -31,9 +31,10 @@ function byId(state: ById<Asset<"image">> = {}, action: Action) {
       return dissoc(action.payload, state);
 
     case ActionType.RENAME_IMAGE_REQUEST:
-    case ActionType.RENAME_IMAGE_SUCCESS:
+    case ActionType.RENAME_IMAGE_SUCCESS: {
       const { id, name } = action.payload;
       return assocPath([id, "name"], name, state);
+    }
 
     default:
       return state;
@@ -56,12 +57,13 @@ function byName(state: ByName = {}, action: Action): ByName {
     case ActionType.DELETE_IMAGE_SUCCESS:
       return dissoc(action.payload, state);
 
-    case ActionType.RENAME_IMAGE_SUCCESS:
+    case ActionType.RENAME_IMAGE_SUCCESS: {
       const { id, name } = action.payload;
       const withoutOldImage = dissoc(name, state);
       const withNewImage = assoc(name, id, withoutOldImage);
 
       return withNewImage;
+    }
 
     default:
       return state;

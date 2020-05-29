@@ -3,9 +3,7 @@ import Card from "./Card";
 import Board from "./Board";
 import BoardControls from "./Board/BoardControls";
 
-interface Props {}
-
-const BoardViewer: React.FC<Props> = (props) => {
+const BoardViewer: React.FC<unknown> = () => {
   return (
     <Card title="Board Viewer" headerType="outside">
       <BoardControls />

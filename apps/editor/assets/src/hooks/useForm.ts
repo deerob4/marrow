@@ -1,8 +1,8 @@
 import { useState } from "react";
 import validate from "../utils/validators";
 
-function useForm<T extends object>(
-  constraints: { [key in keyof T]?: object },
+function useForm<T extends Record<string, unknown>>(
+  constraints: { [key in keyof T]?: Record<string, unknown> },
   defaultValues: T
 ) {
   type Errors = { [key in keyof T]: string[] };

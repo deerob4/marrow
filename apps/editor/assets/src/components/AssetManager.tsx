@@ -13,7 +13,6 @@ interface Props {
   images: Image[];
   audio: Audio[];
   uploadImages: (files: FileList) => void;
-  // uploadAudio: typeof uploadImages;
 }
 
 const AssetLabel = styled.h2`
@@ -45,6 +44,7 @@ const AssetManager: React.FC<Props> = (props) => {
         <AssetLabel>Images</AssetLabel>
         <AssetGrid>
           {props.images.map((image) => (
+            // @ts-ignore
             <UploadedImage key={image.id} image={image} />
           ))}
           <AssetUpload onFilesSelected={props.uploadImages} accept="image/*" />

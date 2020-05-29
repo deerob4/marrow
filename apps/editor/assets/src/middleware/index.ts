@@ -20,14 +20,13 @@ type Next = Dispatch<Action>;
  * Ensures that the authentication token is always stored and
  * removed when auth actions are dispatched.
  */
-const authMiddleware: Middleware = (store: Store) => (next: Next) => (
-  action: Action
-) => {
+const authMiddleware: Middleware = () => (next: Next) => (action: Action) => {
   switch (action.type) {
-    case ActionType.LOGIN_SUCCESS:
+    case ActionType.LOGIN_SUCCESS: {
       const token = action.payload.token;
       TokenStore.set(token);
       break;
+    }
 
     case ActionType.LOGIN_FAILURE:
     case ActionType.LOGOUT:
@@ -58,11 +57,12 @@ const socketMiddleware: Middleware = (store: Store) => (next: Next) => (
       socket.disconnect();
       break;
 
-    case ActionType.EDITOR_CONNECT_REQUEST:
+    case ActionType.EDITOR_CONNECT_REQUEST: {
       const editorId = action.payload;
       editorChannel = socket.channel(`editor:${editorId}`);
       editorChannelActions(store);
       break;
+    }
 
     case ActionType.EDITOR_LEAVE:
       editorChannel.leave();

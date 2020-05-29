@@ -1,6 +1,5 @@
 import { action } from "typesafe-actions";
 import ActionType from "../constants";
-import { UploadingAssets, Image, RenameAsset, Audio } from "../types";
 
 export const editTileSize = (size: number) => {
   window.localStorage.setItem("boardTileSize", size.toString());

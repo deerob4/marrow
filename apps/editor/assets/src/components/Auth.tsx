@@ -4,12 +4,6 @@ import { Route, Link, Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 
-interface Props {
-  // loggedIn: boolean;
-  // user: string;
-  // signout: () => void;
-}
-
 const AuthContainer = styled.div`
   background-color: #6161ff;
   width: 100%;
@@ -33,7 +27,7 @@ const Logo = styled.h1`
   margin-bottom: 0;
 `;
 
-const Auth: React.FC<Props> = (props) => {
+const Auth: React.FC<unknown> = () => {
   return (
     <AuthContainer>
       <InnerAuth>

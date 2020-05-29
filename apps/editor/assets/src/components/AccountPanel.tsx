@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React from "react";
 import styled from "styled-components";
 import { RouteComponentProps } from "react-router";
 import { connect } from "react-redux";

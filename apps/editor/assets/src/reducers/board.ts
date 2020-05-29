@@ -1,11 +1,4 @@
-import {
-  Action,
-  Board,
-  BoardOptions,
-  Dimensions,
-  Path,
-  BoardState
-} from "../types";
+import { Action, BoardOptions, Dimensions, Path, BoardState } from "../types";
 import ActionType from "../constants";
 import { assoc } from "ramda";
 import { combineReducers } from "redux";

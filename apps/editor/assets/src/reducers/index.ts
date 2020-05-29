@@ -2,7 +2,6 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import { History } from "history";
 import { AppState, Action } from "../types";
-import ActionType from "../constants";
 
 import imageReducer, { deletingImages } from "../reducers/images";
 import audioReducer from "../reducers/audio";

@@ -23,15 +23,9 @@ const setPaths = (paths: Path[]) => (traitMap: TraitMap) => {
   }, traitMap);
 };
 
-// function setPaths(paths: Path[], traitMap: TraitMap) {
-//   paths.reduce((x, y) => {
-//     return x;
-//   }, traitMap)
-// }
-
 function traits(state: TraitMap = Map(), action: Action) {
   switch (action.type) {
-    case ActionTypes.RECOMPILE_SUCCESS:
+    case ActionTypes.RECOMPILE_SUCCESS: {
       const { images, labels, audio, board } = action.payload;
       const newState = compose(
         updateTraits(images, (t, image) => ({ ...t, image })),
@@ -39,8 +33,9 @@ function traits(state: TraitMap = Map(), action: Action) {
         updateTraits(labels, (t, labels) => ({ ...t, labels }))
       )(Map());
       return setPaths(board.paths)(newState);
+    }
 
-    case ActionTypes.EDITOR_CONNECT_SUCCESS:
+    case ActionTypes.EDITOR_CONNECT_SUCCESS: {
       const s = compose(
         updateTraits(action.payload.imageTraits, (t, image) => ({
           ...t,
@@ -52,6 +47,7 @@ function traits(state: TraitMap = Map(), action: Action) {
         }))
       )(Map());
       return setPaths(action.payload.board.paths)(s);
+    }
 
     default:
       return state;

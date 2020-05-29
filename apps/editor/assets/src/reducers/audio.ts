@@ -17,9 +17,10 @@ function byId(state: ById<Asset<"audio">> = {}, action: Action) {
     case ActionType.DELETE_AUDIO_SUCCESS:
       return dissoc(action.payload, state);
 
-    case ActionType.RENAME_AUDIO_SUCCESS:
+    case ActionType.RENAME_AUDIO_SUCCESS: {
       const { id, name } = action.payload;
       return assocPath([id, "name"], name, state);
+    }
 
     default:
       return state;

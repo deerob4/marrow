@@ -29,7 +29,7 @@ const GameProperties: React.FC<Props> = (props) => {
       <div className="form-group">
         <label>Header Image</label>
         <FileUpload onFilesSelected={console.log}>
-          {(handleFileSelect, isUploading) => (
+          {(handleFileSelect) => (
             <HeaderImage
               src={props.headerImageUrl}
               onClick={handleFileSelect}

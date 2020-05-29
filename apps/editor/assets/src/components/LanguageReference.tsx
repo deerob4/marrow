@@ -15,7 +15,7 @@ interface SearchStatus {
   results: Reference[];
 }
 
-const LanguageReference: React.FC<{}> = () => {
+const LanguageReference: React.FC<unknown> = () => {
   const [searchStatus, setSearchStatus] = useState<SearchStatus>({
     searching: false,
     query: "",
@@ -82,7 +82,7 @@ const LanguageReference: React.FC<{}> = () => {
 
   function renderSearchResults() {
     if (!searchStatus.results.length) {
-      return <p>No results found for "{searchStatus.query}".</p>;
+      return <p>No results found for &quot;{searchStatus.query}&quot;.</p>;
     }
 
     return allRefLists(searchStatus.results);

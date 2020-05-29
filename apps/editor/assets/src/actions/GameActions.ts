@@ -1,6 +1,6 @@
 import { action, createAsyncAction } from "typesafe-actions";
 import ActionType from "../constants";
-import { GameMetadata, CompilationSuccess } from "../types";
+import { GameMetadata } from "../types";
 import { push } from "connected-react-router";
 
 /**

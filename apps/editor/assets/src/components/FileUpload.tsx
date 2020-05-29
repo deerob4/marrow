@@ -41,8 +41,11 @@ class FileUpload extends React.Component<Props, State> {
   };
 
   onFileSelect = () => {
-    const files = this.fileSelector!.files!;
-    this.props.onFilesSelected(files);
+    const files = this.fileSelector?.files;
+
+    if (files) {
+      this.props.onFilesSelected(files);
+    }
   };
 
   render() {
@@ -54,7 +57,8 @@ class FileUpload extends React.Component<Props, State> {
     fileSelector.setAttribute("type", "file");
     fileSelector.setAttribute("multiple", "multiple");
 
-    if (this.props.accept) fileSelector.setAttribute("accept", this.props.accept);
+    if (this.props.accept)
+      fileSelector.setAttribute("accept", this.props.accept);
 
     return fileSelector;
   }

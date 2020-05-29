@@ -17,7 +17,7 @@ interface Props {
   url: string;
 }
 
-class App extends React.Component<Props, {}> {
+class App extends React.Component<Props, unknown> {
   constructor(props: Props) {
     super(props);
   }
@@ -68,7 +68,7 @@ function extractGameId(url: string) {
   const match = url.match(regex);
 
   if (match) {
-    const [_, gameId] = match;
+    const gameId = match[1];
     return parseInt(gameId, 10);
   }
 }
@@ -77,15 +77,12 @@ const mapStateToProps = (state: AppState) => ({
   isCheckingSession: state.auth.isCheckingSession,
   loggedIn: state.auth.loggedIn,
   url: state.router.location.pathname,
-  gameExists: (gameId: number) => state.gameMetadata.byId[gameId] !== undefined,
+  gameExists: (gameId: number) => state.gameMetadata.byId[gameId] !== undefined
 });
 
 const mapDispatchToProps = {
   loadSession,
-  setEditingGameId,
+  setEditingGameId
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

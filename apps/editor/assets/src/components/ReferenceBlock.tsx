@@ -58,16 +58,16 @@ const Requirements: React.FC<{ required: boolean }> = ({ required }) => {
   );
 };
 
-const Example: React.FC<{ example?: string }> = ({ example }) => {
-  if (!example) return null;
+// const Example: React.FC<{ example?: string }> = ({ example }) => {
+//   if (!example) return null;
 
-  return (
-    <>
-      <h5>Example</h5>
-      <ReactMarkdown source={example} />
-    </>
-  );
-};
+//   return (
+//     <>
+//       <h5>Example</h5>
+//       <ReactMarkdown source={example} />
+//     </>
+//   );
+// };
 
 const Signature: React.FC<{
   args: MarrowType[];

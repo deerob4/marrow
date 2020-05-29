@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import classnames from "classnames";
 
 import { CompileStatus } from "../types";
 import CompilerStatus from "./CompilerStatus";
@@ -18,11 +17,7 @@ const StatusContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const StatusBar: React.FC<Props> = (props) => {
-  const x = classnames("status-bar", {
-    "status-bar--error": props.compileStatus.type === "error"
-  });
-
+const StatusBar: React.FC<Props> = () => {
   return (
     <StatusContainer>
       <CompilerStatus />

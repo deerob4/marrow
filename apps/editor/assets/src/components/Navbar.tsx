@@ -9,7 +9,7 @@ interface Props {
   logout: () => void;
 }
 
-const Navbar: React.FC<Props> = ({ user, logout }) => {
+const Navbar: React.FC<Props> = ({ logout }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
       <Link className="navbar-brand" to="/games">

@@ -13,17 +13,6 @@ interface Props {
   deleteGame: (id: number) => void;
 }
 
-const AccountPanelContainer = styled.div`
-  width: 720px;
-  border-radius: 5px;
-  padding: 30px;
-  background-color: #fff;
-  position: absolute;
-  top: 25%;
-  left: 28%;
-  right: 10%;
-`;
-
 const GameGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 175px);
