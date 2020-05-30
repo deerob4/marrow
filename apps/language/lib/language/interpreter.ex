@@ -12,14 +12,36 @@ defmodule Language.Interpreter do
   import Language.Formatter, only: [format_identifier: 1]
   import Language.Model, only: [is_tile: 1]
 
+  alias Language.Interpreter.Impl
   alias Language.Model, as: Game
   alias Language.Model.{Board, GlobalVariable, PlayerVariable}
   alias Server.GameState
+
+  import Language.Interpreter.Macros
+
   # import Server.GameState, only: [is_event: 2, is_variable: 2]
 
   @type expr :: {atom, [any]}
 
   @type reduced_expr :: {:ok, any} | {:error, String.t()}
+
+  @doc [
+    marrow: %{
+      name: "choose-random",
+      body: "Returns a random item from the given list.",
+      category: :logic,
+      kind: :function,
+      examples: [
+        %{
+          input: ~S{(choose-random (john "smith" "argentina" 10))},
+          output: "john"
+        }
+      ]
+    }
+  ]
+  def woo() do
+    10
+  end
 
   defguard is_event(game_state, value)
            when :erlang.is_map_key(value, :erlang.map_get(:events, game_state))
@@ -51,46 +73,96 @@ defmodule Language.Interpreter do
 
   # Arithmetic operators.
 
-  for {op, fun, default} <- [
-        {:+, &+/2, 0},
-        {:-, &-/2, 0},
-        {:*, &*/2, 1},
-        {:/, &div/2, 1},
-        {:%, &rem/2, 1}
-      ] do
-    def reduce_expr({unquote(op), ops}, state) when length(ops) >= 2 do
-      with {:ok, ops} <- ops |> Enum.reverse() |> reduce_args(state) do
-        if Enum.all?(ops, &is_integer/1) do
-          {:ok, Enum.reduce(ops, unquote(default), unquote(fun))}
-        else
-          {:error, "the arithemetic function `#{inspect(unquote(op))}` only accepts integers"}
-        end
-      end
-    end
+  expr :+, [allowed: :role, min_length: 2], fn args, _ ->
+    Impl.plus(args)
   end
 
-  def reduce_expr({op, _ops}, _state) when op in [:+, :-, :*, :/, :%] do
-    {:error, "the `#{op |> to_string |> inspect()}` operator requires >= 2 arguments"}
+  expr :-, [allowed: :integer, min_length: 2], fn args, _ ->
+    Impl.minus(args)
+  end
+
+  expr :*, [allowed: :integer, min_length: 2], fn args, _ ->
+    Impl.multiply(args)
+  end
+
+  expr :/, [allowed: :integer, min_length: 2], fn args, _ ->
+    Impl.divide(args)
+  end
+
+  expr :%, [allowed: :integer, min_length: 2], fn args, _ ->
+    Impl.mod(args)
   end
 
   # Comparison operators.
 
-  for {op, fun} <- [{:<, &</2}, {:>, &>/2}, {:<=, &<=/2}, {:>=, &>=/2}] do
-    def reduce_expr({unquote(op), args}, state) do
-      with {:ok, args} <- reduce_args(args, state) do
-        result =
-          args
-          |> Enum.reverse()
-          |> Enum.chunk_every(2, 1)
-          |> Enum.map(fn
-            [a, b] -> unquote(fun).(b, a)
-            _a -> true
-          end)
-          |> Enum.all?(& &1)
+  expr :<, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.lt?(args)
+  end
 
-        {:ok, result}
-      end
+  expr :<=, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.lte?(args)
+  end
+
+  expr :>, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.gt?(args)
+  end
+
+  expr :>=, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.gte?(args)
+  end
+
+  # Boolean functions.
+
+  expr :=, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.eq?(args)
+  end
+
+  expr :!=, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.neq?(args)
+  end
+
+  expr :and, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.and?(args)
+  end
+
+  expr :or, [allowed: :boolean, min_length: 2], fn args, _ ->
+    Impl.or?(args)
+  end
+
+  expr :not, [allowed: :boolean, min_length: 1, max_length: 1], fn [arg], _ ->
+    Impl.not?(arg)
+  end
+
+  # Generic functions.
+
+  expr :concat, [allowed: [:string, :boolean, :integer], min_length: 2], fn args, _ ->
+    Impl.concat(args)
+  end
+
+  expr :choose_random, [min_length: 2], fn args, _ ->
+    Impl.choose_random(args)
+  end
+
+  expr :rand_int, [allowed: :integer, min_length: 2, max_length: 2], fn args, _ ->
+    case args do
+      [from, to] when from < to ->
+        Impl.rand_int(from, to)
+
+      [from, to] when from > to ->
+        {:error, "the first argument to `rand-int` must be smaller than the second"}
     end
+  end
+
+  expr :min, [allowed: :integer, min_length: 2], fn args, _ ->
+    Impl.min(args)
+  end
+
+  expr :max, [allowed: :integer, min_length: 2], fn args, _ ->
+    Impl.max(args)
+  end
+
+  expr :player_tile, [allowed: :role, min_length: 1, max_length: 1], fn [role], state ->
+    Impl.player_tile(role, state.role_positions)
   end
 
   def reduce_expr({:if, {condition, when_true, when_false}}, state) do
@@ -106,135 +178,6 @@ defmodule Language.Interpreter do
 
       error ->
         error
-    end
-  end
-
-  # Boolean functions.
-
-  def reduce_expr({:=, args}, state) do
-    with {:ok, args} <- reduce_args(args, state) do
-      if length(args) >= 2 do
-        {:ok, length(Enum.uniq(args)) === 1}
-      else
-        {:error, "the `=` and `!=` functions require at least two arguments"}
-      end
-    end
-  end
-
-  def reduce_expr({:!=, args}, state) do
-    with {:ok, result} <- reduce_expr({:=, args}, state) do
-      {:ok, not result}
-    end
-  end
-
-  def reduce_expr({:not, [arg]}, state) do
-    with {:ok, arg} <- reduce_expr(arg, state) do
-      if is_boolean(arg) do
-        {:ok, not arg}
-      else
-        {:error, "the `not` function requires a Boolean value"}
-      end
-    end
-  end
-
-  def reduce_expr({:and, args}, state) when length(args) >= 2 do
-    with {:ok, args} <- reduce_args(args, state) do
-      if Enum.all?(args, &is_boolean/1) do
-        {:ok, Enum.reduce(args, &and/2)}
-      else
-        {:error, "the `and` function requires Boolean values"}
-      end
-    end
-  end
-
-  def reduce_expr({:or, args}, state) when length(args) >= 2 do
-    with {:ok, args} <- reduce_args(args, state) do
-      if Enum.all?(args, &is_boolean/1) do
-        Enum.reduce(args, &or/2)
-      else
-        {:error, "the `or` function requires Boolean values"}
-      end
-    end
-  end
-
-  def reduce_expr({:and, _args}, _state) do
-    {:error, "the `and` function requires at least 2 arguments"}
-  end
-
-  def reduce_expr({:or, _args}, _state) do
-    {:error, "the `or` function requires at least 2 arguments"}
-  end
-
-  # Generic functions.
-
-  def reduce_expr({:concat, args}, state) do
-    with {:ok, args} <- reduce_args(args, state) do
-      if Enum.all?(args, &concatable?/1) do
-        result =
-          args
-          |> Enum.map(&to_string/1)
-          |> Enum.join()
-
-        {:ok, result}
-      else
-        {:error, "the `concat` function only accepts strings, booleans, and integers"}
-      end
-    end
-  end
-
-  def reduce_expr({:choose_random, args}, state) do
-    with {:ok, args} <- reduce_args(args, state) do
-      {:ok, Enum.random(args)}
-    end
-  end
-
-  def reduce_expr({:rand_int, args}, state) do
-    with {:ok, args} <- reduce_args(args, state) do
-      case args do
-        [from, to] when is_integer(from) and is_integer(to) and from < to ->
-          {:ok, Enum.random(from..to)}
-
-        [from, to] when not is_integer(from) or not is_integer(to) ->
-          {:error, "the `rand-int` function only accepts integers"}
-
-        [from, to] when from > to ->
-          {:error, "the first argument to `rand-int` must be smaller than the second"}
-
-        _ ->
-          {:error, "the `rand-int` function only accepts two arguments"}
-      end
-    end
-  end
-
-  def reduce_expr({:min, args}, state) do
-    with {:ok, args} <- reduce_args(args, state) do
-      if Enum.all?(args, &is_integer/1) do
-        {:ok, Enum.min(args)}
-      else
-        {:error, "the `min` function only accepts integers"}
-      end
-    end
-  end
-
-  def reduce_expr({:max, args}, state) do
-    with {:ok, args} <- reduce_args(args, state) do
-      if Enum.all?(args, &is_integer/1) do
-        {:ok, Enum.max(args)}
-      else
-        {:error, "the `max` function only accepts integers"}
-      end
-    end
-  end
-
-  def reduce_expr({:player_tile, [_] = args}, state) do
-    with {:ok, [role]} <- reduce_args(args, state) do
-      case state do
-        %{role_positions: %{^role => tile}} ->
-          {:ok, tile}
-
-        _ ->
-          {:error, "unknown role `#{format_identifier(role)}` given to the`player-tile` function"}
-      end
     end
   end
 
@@ -280,10 +223,13 @@ defmodule Language.Interpreter do
     {:error, "unknown command `#{format_identifier(command)}`"}
   end
 
+  # Implementations
+
   def reduce_args(args, state \\ %{}) do
     with {:ok, args} <- resolve_variables(args, state),
          values = args |> Enum.map(&reduce_expr(&1, state)) |> List.flatten(),
          :none <- find_expr_errors(values),
+         IO.inspect(values),
          values = Enum.map(values, &lift/1) do
       {:ok, values}
     end
@@ -390,8 +336,6 @@ defmodule Language.Interpreter do
   # we can do equality checks.
   defp extract_tile(%Board.Tile{x: x, y: y}), do: {x, y}
   defp extract_tile(other), do: other
-
-  defp concatable?(x), do: is_bitstring(x) || is_boolean(x) || is_integer(x)
 
   defp lift({:ok, x}), do: x
 

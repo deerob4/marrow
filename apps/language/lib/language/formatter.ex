@@ -39,7 +39,7 @@ defmodule Language.Formatter do
     do: "#{player}->#{var_name}"
 
   def format_identifier(identifier) when is_bitstring(identifier),
-    do: String.replace(identifier, "_", "-")
+    do: identifier |> String.replace("_", "-") |> String.replace(":", "")
 
   def format_identifier(identifier),
     do: identifier |> inspect() |> format_identifier()

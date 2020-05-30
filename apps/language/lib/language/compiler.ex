@@ -73,6 +73,14 @@ defmodule Language.Compiler do
 
   # Basic properties.
 
+  @marrowdoc %{
+    name: "description",
+    kind: :property,
+    category: :game,
+    body: "Sets a useful description for the game, which will be passed to clients.",
+    allowed_in: {:only, :defgame},
+    type: :string
+  }
   defp eval(:defgame, {:description, [desc]}, {game, storage}) do
     with {:ok, desc} <- reduce_expr(desc),
          :ok <- Game.validate({:description, desc}, game) do
@@ -80,6 +88,16 @@ defmodule Language.Compiler do
     end
   end
 
+  @marrowdoc %{
+    name: "max-turns",
+    kind: :property,
+    category: :game,
+    body:
+      "Specifies the maximum number of turns that the game is allowed to run for without terminating.",
+    allowed_in: {:only, :defgame},
+    examples: [%{input: "(max-turns 3)"}],
+    type: :integer
+  }
   defp eval(:defgame, {:max_turns, [max_turns]}, {%Game{} = game, storage}) do
     with {:ok, max_turns} <- reduce_expr(max_turns),
          :ok <- Game.validate({:max_turns, max_turns}, game) do
@@ -87,21 +105,22 @@ defmodule Language.Compiler do
     end
   end
 
-  # defp eval(:defgame, {:max_turns, args}, _) when is_list(args) do
-  #   bad_property_length(:max_turns, args, 1)
-  # end
-
+  @marrowdoc %{
+    name: "turn-time-limit",
+    kind: :property,
+    category: :game,
+    body:
+      "Specifies how many seconds a player is allowed to take to make their turn. If the player does not make their move within the specified limit, they forfeit their turn.",
+    allowed_in: {:only, :defgame},
+    examples: [%{input: "(turn-time-limit 3)"}],
+    type: :integer
+  }
   defp eval(:defgame, {:turn_time_limit, [limit]}, {%Game{} = game, storage}) do
     with {:ok, limit} <- reduce_expr(limit),
          :ok <- Game.validate({:turn_time_limit, limit}, game) do
       {%{game | turn_time_limit: limit}, storage}
     end
   end
-
-  # defp eval(:defgame, {:turn_time_limit, args}, _) when is_list(args) do
-  #   IO.inspect args
-  #   bad_property_length(:turn_time_limit, args, 1)
-  # end
 
   # Top level blocks.
 
@@ -142,6 +161,15 @@ defmodule Language.Compiler do
     collect_commands(:dice, dice, {game, storage})
   end
 
+  @marrowdoc %{
+    name: "roles",
+    kind: :property,
+    category: :game,
+    body:
+      "Specifies the different roles in the game, by which each player will be known. Roles must be unique. If minimum or maximum are set, then there must be enough roles listed to meet those conditions.",
+    allowed_in: {:only, :players},
+    type: {:list, :atom}
+  }
   defp eval(:player, {:roles, roles}, {%Game{} = game, storage}) do
     with %{} = roles <- collect_commands(:roles, roles, %{}),
          :ok <- Game.validate({:roles, roles}, game) do
@@ -201,6 +229,15 @@ defmodule Language.Compiler do
 
   # Player properties.
 
+  @marrowdoc %{
+    name: "min-players",
+    kind: :property,
+    category: :players,
+    body: "Specifies the minimum number of players required to start the game.",
+    examples: [%{input: "(min-players 3)"}],
+    allowed_in: {:only, :players},
+    type: :integer
+  }
   defp eval(:player, {:min_players, [min_players]}, {%Game{} = game, storage}) do
     with {:ok, min_players} <- reduce_expr(min_players),
          :ok <- Game.validate({:min_players, min_players}, game) do
@@ -208,6 +245,15 @@ defmodule Language.Compiler do
     end
   end
 
+  @marrowdoc %{
+    name: "max-players",
+    kind: :property,
+    category: :players,
+    body: "Specifies the maximum number of players who can take part in the game.",
+    examples: [%{input: "(max-players 3)"}],
+    allowed_in: {:only, :players},
+    type: :integer
+  }
   defp eval(:player, {:max_players, [max_players]}, {%Game{} = game, storage}) do
     with {:ok, max_players} <- reduce_expr(max_players),
          :ok <- Game.validate({:max_players, max_players}, game) do
@@ -215,6 +261,26 @@ defmodule Language.Compiler do
     end
   end
 
+  @marrowdoc %{
+    name: "start-order",
+    kind: :property,
+    category: :players,
+    body:
+      "Sets the order in which players take their first turn. This defaults to random, but a list of role names can be passed instead. The order roles are listed is the order they will make their turn. The identifier as-written can be given to use the order specified in the roles command.",
+    allowed_in: {:only, :players},
+    examples: [
+      %{input: "(start-order random)"},
+      %{input: "(start-order as-declared)"},
+      %{input: "(start-order (keir rose jed))"}
+    ],
+    type:
+      {:or,
+       [
+         {:identifier, "random"},
+         {:identifier, "as-declared"},
+         {:list, :role}
+       ]}
+  }
   defp eval(:player, {:start_order, [start_order]}, {%Game{} = game, storage})
        when start_order in ["random", "as_written"] do
     start_order = String.to_existing_atom(start_order)
@@ -227,6 +293,32 @@ defmodule Language.Compiler do
     end
   end
 
+  @marrowdoc %{
+    name: "start-tile",
+    kind: :property,
+    category: :players,
+    body:
+      "Sets the tile where players will start. Optionally takes a list of tuples of the form `(role tile)`, allowing the starting tiles of individual players to be set. For example, `(start-tile (0 0) (a (1 1)))` will cause player a to start on tile `(1 1)`, and everyone else to start on tile `(0 0)`.",
+    allowed_in: {:only, :players},
+    examples: [
+      %{input: "(start-tile (0 0))"},
+      %{
+        input: """
+        (start-tile
+          (keir (0 0))
+          (rose (0 1))
+          (jed (1 1)))
+        """
+      },
+      %{input: "(start-tile (0 0) (keir (0 1)))"}
+    ],
+    type:
+      {:or,
+       [
+         :tile,
+         {:pair, {:role, :tile}}
+       ]}
+  }
   # If everyone starts on the same tile, like (start-tile (0 0)).
   defp eval(:player, {:start_tile, [{x, y} = tile]}, {%Game{} = game, storage}) do
     with :ok <- Game.validate({:start_tile, tile}, game) do

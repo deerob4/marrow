@@ -38,11 +38,11 @@ defmodule Language do
     end
   end
 
-  def initialise_state(source) do
-    with {:ok, model} <- to_game(source) do
-      Server.GameState.initialise(model, Map.keys(model.roles))
-    end
-  end
+  # def initialise_state(source) do
+  #   with {:ok, model} <- to_game(source) do
+  #     Server.GameState.initialise(model, Map.keys(model.roles))
+  #   end
+  # end
 
   def ast(source) do
     with {:ok, tokens} <- Scanner.scan_tokens(source) do
